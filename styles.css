@@ -1,9 +1,10 @@
 :root {
-  --primary: #a206a2;
-  --initial: 0%;
-  --step: 20%;
+  --original: #9db951;
+  --normalized: oklch(from var(--original) l c h);
+  --darkest: 0%;
+  --lightest: 100%;
+  --step-light: 20%;
   --step-dark: 10%;
-  --gap: 2px;
 }
 
 body {
@@ -15,172 +16,83 @@ body {
 .color-wrapper {
   display: flex;
   flex-direction: column;
-  gap: var(--gap);
+  gap: 2px;
 }
 
 .color-original {
   width: 100%;
   height: 100px;
-  background: var(--primary);
+  background: var(--original);
 }
 
 .color-row > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   aspect-ratio: 1;
+}
+
+.color-row.dark {
+  color: white;
 }
 
 .color-row {
   display: flex;
   flex-direction: row;
-  gap: var(--gap);
-}
-
-.color-row.light > div:nth-child(1) {
-  background: oklch(
-    from var(--primary) calc(l * calc(var(--initial) + calc(11 * var(--step))))
-      c h
-  );
-}
-.color-row.light > div:nth-child(2) {
-  background: oklch(
-    from var(--primary) calc(l * calc(var(--initial) + calc(10 * var(--step))))
-      c h
-  );
-}
-.color-row.light > div:nth-child(3) {
-  background: oklch(
-    from var(--primary) calc(l * calc(var(--initial) + calc(9 * var(--step)))) c
-      h
-  );
-}
-.color-row.light > div:nth-child(4) {
-  background: oklch(
-    from var(--primary) calc(l * calc(var(--initial) + calc(8 * var(--step)))) c
-      h
-  );
-}
-.color-row.light > div:nth-child(5) {
-  background: oklch(
-    from var(--primary) calc(l * calc(var(--initial) + calc(7 * var(--step)))) c
-      h
-  );
-}
-.color-row.light > div:nth-child(6) {
-  background: oklch(
-    from var(--primary) calc(l * calc(var(--initial) + calc(6 * var(--step)))) c
-      h
-  );
-}
-.color-row.light > div:nth-child(7) {
-  background: oklch(
-    from var(--primary) calc(l * calc(var(--initial) + calc(5 * var(--step)))) c
-      h
-  );
-}
-
-.color-row.light > div:nth-child(8) {
-  background: oklch(
-    from var(--primary) calc(l * calc(var(--initial) + calc(4 * var(--step)))) c
-      h
-  );
-}
-
-.color-row.light > div:nth-child(9) {
-  background: oklch(
-    from var(--primary) calc(l * calc(var(--initial) + calc(3 * var(--step)))) c
-      h
-  );
-}
-
-.color-row.light > div:nth-child(10) {
-  background: oklch(
-    from var(--primary) calc(l * calc(var(--initial) + calc(2 * var(--step)))) c
-      h
-  );
-}
-
-.color-row.light > div:nth-child(11) {
-  background: oklch(
-    from var(--primary) calc(l * calc(var(--initial) + var(--step))) c h
-  );
-}
-
-.color-row.light > div:nth-child(12) {
-  background: oklch(from var(--primary) calc(l * var(--initial)) c h);
+  gap: 2px;
 }
 
 /* dark palette */
 
 .color-row.dark > div:nth-child(1) {
-  background: oklch(
-    from var(--primary)
-      calc(l * calc(var(--initial) + calc(11 * var(--step-dark)))) c h
-  );
+  background: oklch(from var(--normalized) 70% c h);
 }
 .color-row.dark > div:nth-child(2) {
-  background: oklch(
-    from var(--primary)
-      calc(l * calc(var(--initial) + calc(10 * var(--step-dark)))) c h
-  );
+  background: oklch(from var(--normalized) 60% c h);
 }
 .color-row.dark > div:nth-child(3) {
-  background: oklch(
-    from var(--primary)
-      calc(l * calc(var(--initial) + calc(9 * var(--step-dark)))) c h
-  );
+  background: oklch(from var(--normalized) 50% c h);
 }
 .color-row.dark > div:nth-child(4) {
-  background: oklch(
-    from var(--primary)
-      calc(l * calc(var(--initial) + calc(8 * var(--step-dark)))) c h
-  );
+  background: oklch(from var(--normalized) 40% c h);
 }
 .color-row.dark > div:nth-child(5) {
-  background: oklch(
-    from var(--primary)
-      calc(l * calc(var(--initial) + calc(7 * var(--step-dark)))) c h
-  );
+  background: oklch(from var(--normalized) 30% c h);
 }
 .color-row.dark > div:nth-child(6) {
-  background: oklch(
-    from var(--primary)
-      calc(l * calc(var(--initial) + calc(6 * var(--step-dark)))) c h
-  );
+  background: oklch(from var(--normalized) 20% c h);
 }
 .color-row.dark > div:nth-child(7) {
-  background: oklch(
-    from var(--primary)
-      calc(l * calc(var(--initial) + calc(5 * var(--step-dark)))) c h
-  );
+  background: oklch(from var(--normalized) 10% c h);
 }
 
-.color-row.dark > div:nth-child(8) {
-  background: oklch(
-    from var(--primary)
-      calc(l * calc(var(--initial) + calc(4 * var(--step-dark)))) c h
-  );
+/* light palette */
+
+.color-row.light > div:nth-child(1) {
+  background: oklch(from var(--normalized) 100% c h);
 }
 
-.color-row.dark > div:nth-child(9) {
-  background: oklch(
-    from var(--primary)
-      calc(l * calc(var(--initial) + calc(3 * var(--step-dark)))) c h
-  );
+.color-row.light > div:nth-child(2) {
+  background: oklch(from var(--normalized) 95% c h);
 }
 
-.color-row.dark > div:nth-child(10) {
-  background: oklch(
-    from var(--primary)
-      calc(l * calc(var(--initial) + calc(2 * var(--step-dark)))) c h
-  );
+.color-row.light > div:nth-child(3) {
+  background: oklch(from var(--normalized) 90% c h);
 }
 
-.color-row.dark > div:nth-child(11) {
-  background: oklch(
-    from var(--primary) calc(l * calc(var(--initial) + var(--step-dark))) c h
-  );
+.color-row.light > div:nth-child(4) {
+  background: oklch(from var(--normalized) 85% c h);
 }
 
-.color-row.dark > div:nth-child(12) {
-  background: oklch(from var(--primary) calc(l * var(--initial)) c h);
+.color-row.light > div:nth-child(5) {
+  background: oklch(from var(--normalized) 80% c h);
+}
+
+.color-row.light > div:nth-child(6) {
+  background: oklch(from var(--normalized) 75% c h);
+}
+
+.color-row.light > div:nth-child(7) {
+  background: oklch(from var(--normalized) 70% c h);
 }
