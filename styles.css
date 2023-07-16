@@ -1,0 +1,186 @@
+:root {
+  --primary: #a206a2;
+  --initial: 0%;
+  --step: 20%;
+  --step-dark: 10%;
+  --gap: 2px;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+.color-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.color-original {
+  width: 100%;
+  height: 100px;
+  background: var(--primary);
+}
+
+.color-row > div {
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.color-row {
+  display: flex;
+  flex-direction: row;
+  gap: var(--gap);
+}
+
+.color-row.light > div:nth-child(1) {
+  background: oklch(
+    from var(--primary) calc(l * calc(var(--initial) + calc(11 * var(--step))))
+      c h
+  );
+}
+.color-row.light > div:nth-child(2) {
+  background: oklch(
+    from var(--primary) calc(l * calc(var(--initial) + calc(10 * var(--step))))
+      c h
+  );
+}
+.color-row.light > div:nth-child(3) {
+  background: oklch(
+    from var(--primary) calc(l * calc(var(--initial) + calc(9 * var(--step)))) c
+      h
+  );
+}
+.color-row.light > div:nth-child(4) {
+  background: oklch(
+    from var(--primary) calc(l * calc(var(--initial) + calc(8 * var(--step)))) c
+      h
+  );
+}
+.color-row.light > div:nth-child(5) {
+  background: oklch(
+    from var(--primary) calc(l * calc(var(--initial) + calc(7 * var(--step)))) c
+      h
+  );
+}
+.color-row.light > div:nth-child(6) {
+  background: oklch(
+    from var(--primary) calc(l * calc(var(--initial) + calc(6 * var(--step)))) c
+      h
+  );
+}
+.color-row.light > div:nth-child(7) {
+  background: oklch(
+    from var(--primary) calc(l * calc(var(--initial) + calc(5 * var(--step)))) c
+      h
+  );
+}
+
+.color-row.light > div:nth-child(8) {
+  background: oklch(
+    from var(--primary) calc(l * calc(var(--initial) + calc(4 * var(--step)))) c
+      h
+  );
+}
+
+.color-row.light > div:nth-child(9) {
+  background: oklch(
+    from var(--primary) calc(l * calc(var(--initial) + calc(3 * var(--step)))) c
+      h
+  );
+}
+
+.color-row.light > div:nth-child(10) {
+  background: oklch(
+    from var(--primary) calc(l * calc(var(--initial) + calc(2 * var(--step)))) c
+      h
+  );
+}
+
+.color-row.light > div:nth-child(11) {
+  background: oklch(
+    from var(--primary) calc(l * calc(var(--initial) + var(--step))) c h
+  );
+}
+
+.color-row.light > div:nth-child(12) {
+  background: oklch(from var(--primary) calc(l * var(--initial)) c h);
+}
+
+/* dark palette */
+
+.color-row.dark > div:nth-child(1) {
+  background: oklch(
+    from var(--primary)
+      calc(l * calc(var(--initial) + calc(11 * var(--step-dark)))) c h
+  );
+}
+.color-row.dark > div:nth-child(2) {
+  background: oklch(
+    from var(--primary)
+      calc(l * calc(var(--initial) + calc(10 * var(--step-dark)))) c h
+  );
+}
+.color-row.dark > div:nth-child(3) {
+  background: oklch(
+    from var(--primary)
+      calc(l * calc(var(--initial) + calc(9 * var(--step-dark)))) c h
+  );
+}
+.color-row.dark > div:nth-child(4) {
+  background: oklch(
+    from var(--primary)
+      calc(l * calc(var(--initial) + calc(8 * var(--step-dark)))) c h
+  );
+}
+.color-row.dark > div:nth-child(5) {
+  background: oklch(
+    from var(--primary)
+      calc(l * calc(var(--initial) + calc(7 * var(--step-dark)))) c h
+  );
+}
+.color-row.dark > div:nth-child(6) {
+  background: oklch(
+    from var(--primary)
+      calc(l * calc(var(--initial) + calc(6 * var(--step-dark)))) c h
+  );
+}
+.color-row.dark > div:nth-child(7) {
+  background: oklch(
+    from var(--primary)
+      calc(l * calc(var(--initial) + calc(5 * var(--step-dark)))) c h
+  );
+}
+
+.color-row.dark > div:nth-child(8) {
+  background: oklch(
+    from var(--primary)
+      calc(l * calc(var(--initial) + calc(4 * var(--step-dark)))) c h
+  );
+}
+
+.color-row.dark > div:nth-child(9) {
+  background: oklch(
+    from var(--primary)
+      calc(l * calc(var(--initial) + calc(3 * var(--step-dark)))) c h
+  );
+}
+
+.color-row.dark > div:nth-child(10) {
+  background: oklch(
+    from var(--primary)
+      calc(l * calc(var(--initial) + calc(2 * var(--step-dark)))) c h
+  );
+}
+
+.color-row.dark > div:nth-child(11) {
+  background: oklch(
+    from var(--primary) calc(l * calc(var(--initial) + var(--step-dark))) c h
+  );
+}
+
+.color-row.dark > div:nth-child(12) {
+  background: oklch(from var(--primary) calc(l * var(--initial)) c h);
+}
