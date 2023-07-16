@@ -1,10 +1,11 @@
 :root {
-  --original: #9db951;
+  --original: #ff9b05;
   --normalized: oklch(from var(--original) l c h);
   --darkest: 0%;
   --lightest: 100%;
   --step-light: 20%;
   --step-dark: 10%;
+  --gap: 0px;
 }
 
 body {
@@ -16,7 +17,7 @@ body {
 .color-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--gap);
 }
 
 .color-original {
@@ -40,44 +41,44 @@ body {
 .color-row {
   display: flex;
   flex-direction: row;
-  gap: 2px;
+  gap: var(--gap);
 }
 
 /* dark palette */
 
-.color-row.dark > div:nth-child(1) {
+.color-row.dark > div:nth-child(7) {
   background: oklch(from var(--normalized) 70% c h);
 }
-.color-row.dark > div:nth-child(2) {
+.color-row.dark > div:nth-child(6) {
   background: oklch(from var(--normalized) 60% c h);
 }
-.color-row.dark > div:nth-child(3) {
+.color-row.dark > div:nth-child(5) {
   background: oklch(from var(--normalized) 50% c h);
 }
 .color-row.dark > div:nth-child(4) {
   background: oklch(from var(--normalized) 40% c h);
 }
-.color-row.dark > div:nth-child(5) {
+.color-row.dark > div:nth-child(3) {
   background: oklch(from var(--normalized) 30% c h);
 }
-.color-row.dark > div:nth-child(6) {
+.color-row.dark > div:nth-child(2) {
   background: oklch(from var(--normalized) 20% c h);
 }
-.color-row.dark > div:nth-child(7) {
+.color-row.dark > div:nth-child(1) {
   background: oklch(from var(--normalized) 10% c h);
 }
 
 /* light palette */
 
-.color-row.light > div:nth-child(1) {
+.color-row.light > div:nth-child(7) {
   background: oklch(from var(--normalized) 100% c h);
 }
 
-.color-row.light > div:nth-child(2) {
+.color-row.light > div:nth-child(6) {
   background: oklch(from var(--normalized) 95% c h);
 }
 
-.color-row.light > div:nth-child(3) {
+.color-row.light > div:nth-child(5) {
   background: oklch(from var(--normalized) 90% c h);
 }
 
@@ -85,14 +86,14 @@ body {
   background: oklch(from var(--normalized) 85% c h);
 }
 
-.color-row.light > div:nth-child(5) {
+.color-row.light > div:nth-child(3) {
   background: oklch(from var(--normalized) 80% c h);
 }
 
-.color-row.light > div:nth-child(6) {
+.color-row.light > div:nth-child(2) {
   background: oklch(from var(--normalized) 75% c h);
 }
 
-.color-row.light > div:nth-child(7) {
+.color-row.light > div:nth-child(1) {
   background: oklch(from var(--normalized) 70% c h);
 }
