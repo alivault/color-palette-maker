@@ -1,5 +1,5 @@
 window.onload = () => {
-  const colorPicker = document.querySelector('.color-picker');
+  const colorPicker = document.querySelector('#color-picker');
   const hueSlider = document.querySelector('#hue-slider');
   const saturationSlider = document.querySelector('#saturation-slider');
   const lightnessSlider = document.querySelector('#lightness-slider');
@@ -7,16 +7,11 @@ window.onload = () => {
   const lightPalette = document.querySelector('.color-row.light');
 
   const updatePalette = () => {
-    let color = chroma(colorPicker.value).set(
-      'hsl.s',
-      saturationSlider.value / 100
-    );
-    if (!hueSlider._updating) {
-      color = color.set('hsl.h', hueSlider.value);
-    }
-    hueSlider._updating = false;
-    colorPicker.value = color.hex();
+    let color = chroma(colorPicker.value)
+      .set('hsl.s', saturationSlider.value / 100)
+      .set('hsl.h', hueSlider.value);
 
+    colorPicker.value = color.hex();
     const [L, C, H] = color.oklch();
     const lightnessScale = parseFloat(lightnessSlider.value);
     const saturationScale = saturationSlider.value / 100;
@@ -53,7 +48,9 @@ window.onload = () => {
   colorPicker.addEventListener('input', () => {
     const color = chroma(colorPicker.value);
     const saturation = Math.round(color.get('hsl.s') * 100);
+    const hue = Math.round(color.get('hsl.h'));
     saturationSlider.value = saturation;
+    hueSlider.value = hue;
     updatePalette();
   });
 

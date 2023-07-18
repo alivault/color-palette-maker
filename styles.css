@@ -7,8 +7,14 @@ body {
   align-items: center;
 }
 
+hr {
+  width: 100%;
+  margin: 20px 0 20px 0;
+}
+
 h1,
 h2,
+h3,
 p {
   margin: 0;
 }
@@ -24,17 +30,15 @@ label {
 .color-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
   width: 100%;
   max-width: 800px;
 }
 
 .controls {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 20px;
   flex-wrap: wrap;
+  gap: 20px;
 }
 
 .control {
@@ -63,7 +67,7 @@ input {
   border: none;
 }
 
-.color-picker::-webkit-color-swatch {
+.color-picker::-moz-color-swatch {
   border-radius: 0px;
   border: none;
 }
@@ -75,17 +79,17 @@ input {
   padding: 20px;
   align-items: center;
   justify-content: center;
-  width: 100%;
   aspect-ratio: 1;
   background-color: #0088ff;
 }
 
-.color-hex {
-  opacity: 0.5;
+.color-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 2px;
+  margin-bottom: 20px;
 }
 
-.color-row {
-  display: flex;
-  flex-direction: row;
-  gap: 2px;
+.color-hex {
+  opacity: 0.5;
 }
