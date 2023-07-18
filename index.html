@@ -5,26 +5,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Color Palette Generator</title>
     <link rel="stylesheet" href="styles.css" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.4.2/chroma.min.js"
+      integrity="sha512-zInFF17qBFVvvvFpIfeBzo7Tj7+rQxLeTJDmbxjBz5/zIr89YVbTNelNhdTT+/DCrxoVzBeUPVFJsczKbB7sew=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="script.js" defer></script>
   </head>
   <body>
     <div class="color-wrapper">
-      <h2>Original</h2>
-      <div class="color-original"></div>
-      <h2>Dark palette</h2>
-      <div class="color-row dark">
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-        <div>4</div>
-        <div>5</div>
+      <h1>ChromaBlend</h1>
+      <h2>A color palette maker that preserves brightness levels.</h2>
+      <p>
+        With this tool, you can easily select any base color, and it will
+        generate two palettes: a dark palette and a light palette. When the
+        lightness slider is set in the middle, the dark palette ensures
+        legibility with white text, while the light palette ensures legibility
+        with black text. Each tile displays the color contrast ratio, as well as
+        the hex code of the color.
+      </p>
+      <div class="controls">
+        <div class="control">
+          <label for="color-picker">Color:</label>
+          <input
+            class="color-picker"
+            type="color"
+            name="color-picker"
+            value="#308C8C"
+          />
+        </div>
+        <div class="control">
+          <label for="hue-slider">Hue:</label>
+          <input id="hue-slider" type="range" min="0" max="360" value="180" />
+        </div>
+        <div class="control">
+          <label for="saturation-slider">Saturation:</label>
+          <input
+            id="saturation-slider"
+            type="range"
+            min="1"
+            max="100"
+            value="50"
+          />
+          <output id="chroma-value"></output>
+        </div>
+        <div class="control">
+          <label for="lightness-slider">Lightness:</label>
+          <input
+            id="lightness-slider"
+            type="range"
+            min="0.5"
+            max="1.5"
+            step="0.01"
+            value="1"
+          />
+        </div>
       </div>
-      <h2>Light palette</h2>
+      <h3>Dark palette</h3>
+      <div class="color-row dark">
+        <div class="color-tile">
+          <span class="color-contrast"></span>
+          <span class="color-hex"></span>
+        </div>
+        <div class="color-tile">
+          <span class="color-contrast"></span>
+          <span class="color-hex"></span>
+        </div>
+        <div class="color-tile">
+          <span class="color-contrast"></span>
+          <span class="color-hex"></span>
+        </div>
+        <div class="color-tile">
+          <span class="color-contrast"></span>
+          <span class="color-hex"></span>
+        </div>
+        <div class="color-tile">
+          <span class="color-contrast"></span>
+          <span class="color-hex"></span>
+        </div>
+      </div>
+      <h3>Light palette</h3>
       <div class="color-row light">
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-        <div>4</div>
-        <div>5</div>
+        <div class="color-tile">
+          <span class="color-contrast"></span>
+          <span class="color-hex"></span>
+        </div>
+        <div class="color-tile">
+          <span class="color-contrast"></span>
+          <span class="color-hex"></span>
+        </div>
+        <div class="color-tile">
+          <span class="color-contrast"></span>
+          <span class="color-hex"></span>
+        </div>
+        <div class="color-tile">
+          <span class="color-contrast"></span>
+          <span class="color-hex"></span>
+        </div>
+        <div class="color-tile">
+          <span class="color-contrast"></span>
+          <span class="color-hex"></span>
+        </div>
       </div>
     </div>
   </body>
