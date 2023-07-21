@@ -16,12 +16,12 @@
   </head>
   <body>
     <div class="color-wrapper">
-      <h1>Color Palette Maker</h1>
-      <p class="desc">
-        Color Palette Maker uses a clever
-        color system (OKLCH) to keep colors equally bright, no matter the hue.
-        Every color tile shows you its contrast level and its color code (hex).
-      </p>
+      <div class="hero-wrapper">
+        <h1>Color Palette Maker</h1>
+        <p class="desc">
+          Color Palette Maker uses a clever color system (OKLCH) to keep colors equally bright across all hues. Every color tile shows you its contrast level and color code (hex). The foreground text color is automatically adjusted to be readable on the background color.
+        </p>
+      </div>
       <div class="controls">
         <div class="control">
           <label for="color-picker">Color</label>
@@ -64,15 +64,17 @@
             id="num-tiles-slider"
             type="range"
             min="2"
-            max="96"
+            max="48"
+            step="1"
             value="12"
           />
           <output id="num-tiles-value"></output>
         </div>
       </div>
-      <hr />
-      <div class="palette-name">Palette</div>
-      <div class="color-row" id="color-palette"></div>
+      <div class="palette">
+        <div class="palette-name">Palette</div>
+        <div class="palette-tiles" id="color-palette"></div>
+      </div>
       </div>
     </div>
   </body>
