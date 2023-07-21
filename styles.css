@@ -112,6 +112,6 @@ input {
   font-size: 12px;
 }
 
-#num-tiles-value {
+output {
   font-variant: tabular-nums;
 }
