@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ChromaBlend</title>
+    <title>Color Palette Maker</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" href="favicon.png" type="image/png" />
     <script
@@ -17,11 +17,10 @@
   <body>
     <div class="color-wrapper">
       <h1>Color Palette Maker</h1>
-      <h2>Vibrant color palettes, made easy.</h2>
-      <p>
-        Color Palette Maker helps you create balanced color palettes. It uses a clever
+      <p class="desc">
+        Color Palette Maker uses a clever
         color system (OKLCH) to keep colors equally bright, no matter the hue.
-        Every color box shows you its contrast level and its color code (hex).
+        Every color tile shows you its contrast level and its color code (hex).
       </p>
       <div class="controls">
         <div class="control">
@@ -72,7 +71,7 @@
         </div>
       </div>
       <hr />
-      <h3>Palette</h3>
+      <div class="palette-name">Palette</div>
       <div class="color-row" id="color-palette"></div>
       </div>
     </div>

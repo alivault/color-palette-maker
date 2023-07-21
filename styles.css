@@ -9,7 +9,7 @@ body {
 
 hr {
   width: 100%;
-  margin: 20px 0 20px 0;
+  margin: 10px 0 10px 0;
 }
 
 h1,
@@ -24,6 +24,11 @@ h2 {
 }
 
 label {
+  font-weight: bold;
+}
+
+.palette-name {
+  font-size: 18px;
   font-weight: bold;
 }
 
@@ -45,6 +50,7 @@ label {
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 4px;
 }
 
 input {
@@ -88,7 +94,6 @@ input {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(78px, 1fr));
   gap: 4px;
-  margin-bottom: 20px;
 }
 
 .color-hex {
