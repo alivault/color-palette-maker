@@ -23,7 +23,7 @@ p {
 .hero-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
 
 h1 {
