@@ -15,79 +15,91 @@
     <script src="script.js" defer></script>
   </head>
   <body>
-    <div class="color-wrapper">
-      <div class="hero-wrapper">
-        <h1>Color Palette Maker</h1>
-        <p class="desc">
-          Color Palette Maker uses a clever color system (OKLCH) to keep colors equally bright across all hues. Every color tile shows you its contrast level and color code (hex). The foreground text color is automatically adjusted to be readable on the background color.
-        </p>
-      </div>
-      <div class="controls">
-        <div class="control">
-          <label for="color-picker">Color</label>
-          <input
-            class="color-picker"
-            id="color-picker"
-            type="color"
-            name="color-picker"
-            value="#308C8C"
-          />
-          <output id="color-output"></output>
+    <div class="main">
+      <div class="color-wrapper">
+        <div class="hero-wrapper">
+          <h1>Color Palette Maker</h1>
+          <p class="desc">
+            A unique and intuitive tool for crafting harmonious color palettes. It uses a clever color system (OKLCH) to keep colors equally bright as you adjust the hue. Each color tile your create displays its color code (hex) and its contrast level, automatically adjusting the text from black to white to ensure legiblity.
+          </p>
         </div>
-        <div class="control">
-          <label for="hue-slider">Hue</label>
-          <input id="hue-slider" type="range" min="0" max="360" value="180" />
-          <output id="hue-output"></output>
+        <div class="palette">
+          <div class="palette-tiles" id="color-palette"></div>
         </div>
-        <div class="control">
-          <label for="saturation-slider">Saturation</label>
-          <input
-            id="saturation-slider"
-            type="range"
-            min="1"
-            max="100"
-            value="50"
-          />
-          <output id="saturation-output"></output>
         </div>
-        <div class="control">
-          <label for="lightness-slider">Lightness</label>
-          <input
-            id="lightness-slider"
-            type="range"
-            min="0.5"
-            max="1.5"
-            step="0.001"
-            value="1"
-          />
-          <output id="lightness-output"></output>
+        <div class="controls">
+          <div class="control">
+            <label for="color-picker">Color</label>
+            <input
+              class="color-picker"
+              id="color-picker"
+              type="color"
+              name="color-picker"
+              value="#2f8d8d"
+            />
+            <output id="color-output"></output>
+          </div>
+          <div class="control">
+            <label for="num-tiles-slider">Number of tiles</label>
+            <input
+              id="num-tiles-slider"
+              type="range"
+              min="2"
+              max="96"
+              step="1"
+              value="64"
+            />
+            <output id="num-tiles-value"></output>
+          </div>
+          <div class="control">
+            <label for="hue-slider">Hue</label>
+            <input id="hue-slider" type="range" min="0" max="360" value="180" />
+            <output id="hue-output"></output>
+          </div>
+          <div class="control">
+            <label for="start-hue-slider">Start Hue</label>
+            <input id="start-hue-slider" type="range" min="0" max="360" step="1" value="125" />
+            <output id="start-hue-output"></output>
+          </div>
+          <div class="control">
+            <label for="end-hue-slider">End Hue</label>
+            <input id="end-hue-slider" type="range" min="0" max="360" step="1" value="237" />
+            <output id="end-hue-output"></output>
+          </div>
+          <div class="control">
+            <label for="saturation-slider">Saturation</label>
+            <input
+              id="saturation-slider"
+              type="range"
+              min="1"
+              max="100"
+              value="50"
+            />
+            <output id="saturation-output"></output>
+          </div>
+          <div class="control">
+            <label for="lightness-slider">Lightness</label>
+            <input
+              id="lightness-slider"
+              type="range"
+              min="0"
+              max="2"
+              step="0.01"
+              value="1"
+            />
+            <output id="lightness-output"></output>
+          </div>
+          <div class="control">
+            <label for="start-lightness-slider">Start Lightness</label>
+            <input id="start-lightness-slider" type="range" min="0" max="2" step="0.01" value="1" />
+            <output id="start-lightness-output"></output>
+          </div>
+          <div class="control">
+            <label for="end-lightness-slider">End Lightness</label>
+            <input id="end-lightness-slider" type="range" min="0" max="2" step="0.01" value="0.3" />
+            <output id="end-lightness-output"></output>
+          </div>
         </div>
-        <div class="control">
-          <label for="num-tiles-slider">Number of tiles</label>
-          <input
-            id="num-tiles-slider"
-            type="range"
-            min="2"
-            max="96"
-            step="1"
-            value="12"
-          />
-          <output id="num-tiles-value"></output>
-        </div>
-        <div class="control">
-          <label for="start-hue-slider">Start Hue</label>
-          <input id="start-hue-slider" type="range" min="0" max="360" step="1" value="180" />
-          <output id="start-hue-output"></output>
-        </div>
-        <div class="control">
-          <label for="end-hue-slider">End Hue</label>
-          <input id="end-hue-slider" type="range" min="0" max="360" step="1" value="180" />
-          <output id="end-hue-output"></output>
-        </div>
-      </div>
-      <div class="palette">
-        <div class="palette-tiles" id="color-palette"></div>
-      </div>
       </div>
     </div>
   </body>

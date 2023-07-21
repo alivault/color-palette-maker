@@ -13,9 +13,19 @@ window.onload = () => {
   const lightnessOutput = document.querySelector('#lightness-output');
   const startHueOutput = document.querySelector('#start-hue-output');
   const endHueOutput = document.querySelector('#end-hue-output');
+  const startLightnessSlider = document.querySelector(
+    '#start-lightness-slider'
+  );
+  const endLightnessSlider = document.querySelector('#end-lightness-slider');
+  const startLightnessOutput = document.querySelector(
+    '#start-lightness-output'
+  );
+  const endLightnessOutput = document.querySelector('#end-lightness-output');
 
   let hueShift = 0;
   let prevHueSliderValue = hueSlider.value;
+  let lightnessShift = 0;
+  let prevLightnessSliderValue = lightnessSlider.value;
 
   const wrapHue = hue => ((hue % 360) + 360) % 360;
 
@@ -28,11 +38,8 @@ window.onload = () => {
 
     colorPicker.value = color.hex();
     const [L, C, H] = color.oklch();
-    const lightnessScale = parseFloat(lightnessSlider.value);
     const saturationScale = saturationSlider.value / 100;
-    let hueRange = wrapHue(endHueSlider.value - startHueSlider.value);
-    // Adjust the hueRange if it's more than 180
-    hueRange = hueRange > 180 ? 360 - hueRange : hueRange;
+    let hueRange = endHueSlider.value - startHueSlider.value;
     const hueStep = hueRange / numTilesSlider.value;
 
     for (let i = 0; i < numTilesSlider.value; i++) {
@@ -43,10 +50,14 @@ window.onload = () => {
         <span class="color-hex"></span>
       `;
 
-      const l = (1 - (i * (1 - 0.1)) / numTilesSlider.value) * lightnessScale;
+      const lightnessStart = parseFloat(startLightnessSlider.value);
+      const lightnessEnd = parseFloat(endLightnessSlider.value);
+      const lightnessStep =
+        (lightnessEnd - lightnessStart) / numTilesSlider.value;
+      const l = lightnessStart + lightnessStep * i;
       const c = C;
       const s = saturationScale;
-      const h = wrapHue(parseFloat(startHueSlider.value) + hueStep * i);
+      const h = (parseFloat(startHueSlider.value) + hueStep * i) % 360;
       const tileColor = chroma.oklch(l, c, h).set('hsl.s', s).set('hsl.h', h);
       const contrastColor =
         chroma.contrast(tileColor, 'white') >
@@ -70,15 +81,54 @@ window.onload = () => {
 
   colorPicker.addEventListener('input', () => {
     colorOutput.value = colorPicker.value;
+    const color = chroma(colorPicker.value);
+    const hue = Math.round(color.get('hsl.h'));
+    hueSlider.value = hue;
+    hueOutput.value = hue;
+    startHueOutput.value = startHueSlider.value;
+    endHueOutput.value = endHueSlider.value;
+    updatePalette();
   });
+
   hueSlider.addEventListener('input', () => {
     hueOutput.value = hueSlider.value;
+    hueShift = hueSlider.value - prevHueSliderValue;
+    startHueSlider.value = wrapHue(parseInt(startHueSlider.value) + hueShift);
+    endHueSlider.value = wrapHue(parseInt(endHueSlider.value) + hueShift);
+    prevHueSliderValue = hueSlider.value;
+    startHueOutput.value = startHueSlider.value;
+    endHueOutput.value = endHueSlider.value;
+
+    let color = chroma(colorPicker.value);
+    color = color.set('hsl.h', hueSlider.value);
+    colorPicker.value = color.hex();
+    colorOutput.value = colorPicker.value;
+    updatePalette();
   });
+
   saturationSlider.addEventListener('input', () => {
     saturationOutput.value = saturationSlider.value;
   });
   lightnessSlider.addEventListener('input', () => {
     lightnessOutput.value = lightnessSlider.value;
+    lightnessShift = lightnessSlider.value - prevLightnessSliderValue;
+
+    let newStartLightness =
+      parseFloat(startLightnessSlider.value) + lightnessShift;
+    let newEndLightness = parseFloat(endLightnessSlider.value) + lightnessShift;
+
+    newStartLightness = Math.max(0, Math.min(newStartLightness, 2));
+    newEndLightness = Math.max(0, Math.min(newEndLightness, 2));
+
+    startLightnessSlider.value = newStartLightness;
+    endLightnessSlider.value = newEndLightness;
+
+    startLightnessOutput.value = startLightnessSlider.value;
+    endLightnessOutput.value = endLightnessSlider.value;
+
+    prevLightnessSliderValue = lightnessSlider.value;
+
+    updatePalette();
   });
   startHueSlider.addEventListener('input', () => {
     startHueOutput.value = startHueSlider.value;
@@ -86,14 +136,14 @@ window.onload = () => {
   endHueSlider.addEventListener('input', () => {
     endHueOutput.value = endHueSlider.value;
   });
-
-  colorPicker.dispatchEvent(new Event('input'));
-  hueSlider.dispatchEvent(new Event('input'));
-  saturationSlider.dispatchEvent(new Event('input'));
-  lightnessSlider.dispatchEvent(new Event('input'));
-  startHueSlider.dispatchEvent(new Event('input'));
-  endHueSlider.dispatchEvent(new Event('input'));
-
+  startLightnessSlider.addEventListener('input', () => {
+    startLightnessOutput.value = startLightnessSlider.value;
+    updatePalette();
+  });
+  endLightnessSlider.addEventListener('input', () => {
+    endLightnessOutput.value = endLightnessSlider.value;
+    updatePalette();
+  });
   saturationSlider.addEventListener('input', updatePalette);
   colorPicker.addEventListener('input', () => {
     const color = chroma(colorPicker.value);
@@ -106,7 +156,6 @@ window.onload = () => {
     prevHueSliderValue = hueSlider.value;
     updatePalette();
   });
-
   lightnessSlider.addEventListener('input', updatePalette);
   hueSlider.addEventListener('input', () => {
     hueShift = hueSlider.value - prevHueSliderValue;
@@ -123,6 +172,17 @@ window.onload = () => {
     updatePalette();
     document.querySelector('#num-tiles-value').innerText = numTilesSlider.value;
   });
+
+  startHueOutput.value = startHueSlider.value;
+  endHueOutput.value = endHueSlider.value;
+
+  hueSlider.dispatchEvent(new Event('input'));
+  saturationSlider.dispatchEvent(new Event('input'));
+  lightnessSlider.dispatchEvent(new Event('input'));
+  startHueSlider.dispatchEvent(new Event('input'));
+  endHueSlider.dispatchEvent(new Event('input'));
+  startLightnessSlider.dispatchEvent(new Event('input'));
+  endLightnessSlider.dispatchEvent(new Event('input'));
 
   updatePalette();
   document.querySelector('#num-tiles-value').innerText = numTilesSlider.value;
