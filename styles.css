@@ -32,7 +32,7 @@ label {
   flex-direction: column;
   gap: 10px;
   width: 100%;
-  max-width: 800px;
+  max-width: 1000px;
 }
 
 .controls {
@@ -75,21 +75,23 @@ input {
 .color-tile {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 20px;
+  gap: 4px;
+  padding: 16px;
+  height: 144px;
   align-items: center;
-  justify-content: center;
-  aspect-ratio: 1;
-  background-color: #0088ff;
+  justify-content: end;
+  background-color: #2f8d8d;
+  border-radius: 10px;
 }
 
 .color-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-  gap: 2px;
+  grid-template-columns: repeat(auto-fit, minmax(78px, 1fr));
+  gap: 4px;
   margin-bottom: 20px;
 }
 
 .color-hex {
   opacity: 0.5;
+  font-size: 12px;
 }

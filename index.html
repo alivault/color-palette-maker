@@ -16,14 +16,12 @@
   </head>
   <body>
     <div class="color-wrapper">
-      <h1>ChromaBlend</h1>
-      <h2>Creating vibrant color palettes, made easy.</h2>
+      <h1>Color Palette Maker</h1>
+      <h2>Vibrant color palettes, made easy.</h2>
       <p>
-        ChromaBlend helps you create balanced color palettes. It uses a clever
+        Color Palette Maker helps you create balanced color palettes. It uses a clever
         color system (OKLCH) to keep colors equally bright, no matter the hue.
-        Adjust the lightness slider to see a dark palette (good with white text)
-        and a light palette (good with black text). Every color box shows you
-        its contrast level and its color code (hex).
+        Every color box shows you its contrast level and its color code (hex).
       </p>
       <div class="controls">
         <div class="control">
@@ -49,7 +47,6 @@
             max="100"
             value="50"
           />
-          <output id="chroma-value"></output>
         </div>
         <div class="control">
           <label for="lightness-slider">Lightness</label>
@@ -62,53 +59,21 @@
             value="1"
           />
         </div>
+        <div class="control">
+          <label for="num-tiles-slider">Number of tiles</label>
+          <input
+            id="num-tiles-slider"
+            type="range"
+            min="2"
+            max="96"
+            value="12"
+          />
+          <output id="num-tiles-value"></output>
+        </div>
       </div>
       <hr />
-      <h3>Dark palette</h3>
-      <div class="color-row dark">
-        <div class="color-tile">
-          <span class="color-contrast"></span>
-          <span class="color-hex"></span>
-        </div>
-        <div class="color-tile">
-          <span class="color-contrast"></span>
-          <span class="color-hex"></span>
-        </div>
-        <div class="color-tile">
-          <span class="color-contrast"></span>
-          <span class="color-hex"></span>
-        </div>
-        <div class="color-tile">
-          <span class="color-contrast"></span>
-          <span class="color-hex"></span>
-        </div>
-        <div class="color-tile">
-          <span class="color-contrast"></span>
-          <span class="color-hex"></span>
-        </div>
-      </div>
-      <h3>Light palette</h3>
-      <div class="color-row light">
-        <div class="color-tile">
-          <span class="color-contrast"></span>
-          <span class="color-hex"></span>
-        </div>
-        <div class="color-tile">
-          <span class="color-contrast"></span>
-          <span class="color-hex"></span>
-        </div>
-        <div class="color-tile">
-          <span class="color-contrast"></span>
-          <span class="color-hex"></span>
-        </div>
-        <div class="color-tile">
-          <span class="color-contrast"></span>
-          <span class="color-hex"></span>
-        </div>
-        <div class="color-tile">
-          <span class="color-contrast"></span>
-          <span class="color-hex"></span>
-        </div>
+      <h3>Palette</h3>
+      <div class="color-row" id="color-palette"></div>
       </div>
     </div>
   </body>
