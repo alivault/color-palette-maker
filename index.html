@@ -38,7 +38,7 @@
             <output id="color-output"></output>
           </div>
           <div class="control">
-            <div class="label-wrapper"><label for="num-tiles-slider">Number of tiles</label><output id="num-tiles-value"></output></div>
+            <div class="label-wrapper"><label for="num-tiles-slider">Number of tiles</label><output id="num-tiles-output"></output></div>
             <input
               id="num-tiles-slider"
               type="range"
@@ -70,15 +70,16 @@
           </div>
           <div class="control">
             <div class="label-wrapper">
-              <label for="saturation-slider">Saturation</label>
-              <output id="saturation-output"></output>
+              <label for="chroma-slider">Chroma</label>
+              <output id="chroma-output"></output>
             </div>
             <input
-              id="saturation-slider"
+              id="chroma-slider"
               type="range"
-              min="1"
-              max="100"
-              value="62"
+              min="0"
+              max="0.37"
+              step="0.01"
+              value="0.18"
             />
           </div>
           <div class="control">
@@ -90,9 +91,9 @@
               id="lightness-slider"
               type="range"
               min="0"
-              max="2"
+              max="1"
               step="0.01"
-              value="1"
+              value="0.5"
             />
           </div>
           <div class="control">
@@ -100,14 +101,14 @@
               <label for="start-lightness-slider">Start Lightness</label>
               <output id="start-lightness-output"></output>
             </div>
-            <input id="start-lightness-slider" type="range" min="0" max="2" step="0.01" value="1" />
+            <input id="start-lightness-slider" type="range" min="0" max="1" step="0.01" value="0.9" />
           </div>
           <div class="control">
             <div class="label-wrapper">
               <label for="end-lightness-slider">End Lightness</label>
               <output id="end-lightness-output"></output>
             </div>
-            <input id="end-lightness-slider" type="range" min="0" max="2" step="0.01" value="0.3" />
+            <input id="end-lightness-slider" type="range" min="0" max="1" step="0.01" value="0.2" />
           </div>
         </div>
       </div>

@@ -1,189 +1,141 @@
 window.onload = () => {
-  const colorPicker = document.querySelector('#color-picker');
-  const hueSlider = document.querySelector('#hue-slider');
-  const startHueSlider = document.querySelector('#start-hue-slider');
-  const endHueSlider = document.querySelector('#end-hue-slider');
-  const saturationSlider = document.querySelector('#saturation-slider');
-  const lightnessSlider = document.querySelector('#lightness-slider');
-  const numTilesSlider = document.querySelector('#num-tiles-slider');
-  const colorPalette = document.querySelector('#color-palette');
-  const colorOutput = document.querySelector('#color-output');
-  const hueOutput = document.querySelector('#hue-output');
-  const saturationOutput = document.querySelector('#saturation-output');
-  const lightnessOutput = document.querySelector('#lightness-output');
-  const startHueOutput = document.querySelector('#start-hue-output');
-  const endHueOutput = document.querySelector('#end-hue-output');
-  const startLightnessSlider = document.querySelector(
-    '#start-lightness-slider'
-  );
-  const endLightnessSlider = document.querySelector('#end-lightness-slider');
-  const startLightnessOutput = document.querySelector(
-    '#start-lightness-output'
-  );
-  const endLightnessOutput = document.querySelector('#end-lightness-output');
-
-  let hueShift = 0;
-  let prevHueSliderValue = hueSlider.value;
-  let lightnessShift = 0;
-  let prevLightnessSliderValue = lightnessSlider.value;
+  const selectors = {
+    colorPicker: '#color-picker',
+    startHueSlider: '#start-hue-slider',
+    endHueSlider: '#end-hue-slider',
+    chromaSlider: '#chroma-slider',
+    numTilesSlider: '#num-tiles-slider',
+    colorPalette: '#color-palette',
+    numTilesValue: '#num-tiles-value',
+    startLightnessSlider: '#start-lightness-slider',
+    endLightnessSlider: '#end-lightness-slider',
+    hueSlider: '#hue-slider',
+    lightnessSlider: '#lightness-slider',
+  };
 
   const wrapHue = hue => ((hue % 360) + 360) % 360;
 
-  const updatePalette = () => {
-    colorPalette.innerHTML = '';
+  const el = Object.keys(selectors).reduce((acc, selector) => {
+    acc[selector] = document.querySelector(selectors[selector]);
+    return acc;
+  }, {});
 
-    let color = chroma(colorPicker.value)
-      .set('hsl.s', saturationSlider.value / 100)
-      .set('hsl.h', hueSlider.value);
-
-    colorPicker.value = color.hex();
-    const [L, C, H] = color.oklch();
-    const saturationScale = saturationSlider.value / 100;
-    let hueRange = endHueSlider.value - startHueSlider.value;
-    const hueStep = hueRange / numTilesSlider.value;
-
-    for (let i = 0; i < numTilesSlider.value; i++) {
-      const tile = document.createElement('div');
-      tile.className = 'color-tile';
-      tile.innerHTML = `
-        <span class="color-contrast"></span>
-        <span class="color-hex"></span>
-      `;
-
-      const lightnessStart = parseFloat(startLightnessSlider.value);
-      const lightnessEnd = parseFloat(endLightnessSlider.value);
-      const lightnessStep =
-        (lightnessEnd - lightnessStart) / numTilesSlider.value;
-      const l = lightnessStart + lightnessStep * i;
-      const c = C;
-      const s = saturationScale;
-      const h = (parseFloat(startHueSlider.value) + hueStep * i) % 360;
-      const tileColor = chroma.oklch(l, c, h).set('hsl.s', s).set('hsl.h', h);
-      const contrastColor =
-        chroma.contrast(tileColor, 'white') >
-        chroma.contrast(tileColor, 'black')
-          ? 'white'
-          : 'black';
-      tile.style.backgroundColor = tileColor.css();
-      tile.style.color = contrastColor;
-
-      const hexElement = tile.querySelector('.color-hex');
-      const contrastElement = tile.querySelector('.color-contrast');
-
-      hexElement.textContent = tileColor.hex().substring(1);
-      contrastElement.textContent = `${chroma
-        .contrast(tileColor, contrastColor)
-        .toFixed(1)}`;
-
-      colorPalette.appendChild(tile);
-    }
+  const updateOutputs = () => {
+    document.querySelector('#hue-output').value = el.hueSlider.value;
+    document.querySelector('#start-hue-output').value = el.startHueSlider.value;
+    document.querySelector('#end-hue-output').value = el.endHueSlider.value;
+    document.querySelector('#lightness-output').value =
+      el.lightnessSlider.value;
+    document.querySelector('#start-lightness-output').value =
+      el.startLightnessSlider.value;
+    document.querySelector('#end-lightness-output').value =
+      el.endLightnessSlider.value;
+    document.querySelector('#chroma-output').value = el.chromaSlider.value;
+    document.querySelector('#num-tiles-output').value = el.numTilesSlider.value;
+    document.querySelector('#color-output').value = el.colorPicker.value;
   };
 
-  colorPicker.addEventListener('input', () => {
-    colorOutput.value = colorPicker.value;
-    const color = chroma(colorPicker.value);
-    const hue = Math.round(color.get('hsl.h'));
-    hueSlider.value = hue;
-    hueOutput.value = hue;
-    startHueOutput.value = startHueSlider.value;
-    endHueOutput.value = endHueSlider.value;
+  const updatePalette = () => {
+    el.colorPalette.innerHTML = '';
+
+    let hueRange = [];
+    let startHue = parseInt(el.startHueSlider.value);
+    let endHue = parseInt(el.endHueSlider.value);
+    let startLightness = parseFloat(el.startLightnessSlider.value);
+    let endLightness = parseFloat(el.endLightnessSlider.value);
+    let chromaValue = parseFloat(el.chromaSlider.value);
+    let numSteps = parseInt(el.numTilesSlider.value);
+    let hueStep = (endHue - startHue) / numSteps;
+    let lightnessStep = (endLightness - startLightness) / numSteps;
+
+    for (let i = 0; i < numSteps; i++) {
+      hueRange.push(
+        chroma(el.colorPicker.value)
+          .set('oklch.h', startHue + hueStep * i)
+          .set('oklch.l', startLightness + lightnessStep * i)
+          .set('oklch.c', chromaValue) // Set chroma
+      );
+    }
+
+    const colorScale = chroma.scale(hueRange).mode('oklch').colors(numSteps);
+
+    for (let i = 0; i < numSteps; i++) {
+      const tile = document.createElement('div');
+      tile.className = 'color-tile';
+      tile.style.backgroundColor = colorScale[i];
+
+      const contrastColor =
+        chroma.contrast(colorScale[i], 'white') >
+        chroma.contrast(colorScale[i], 'black')
+          ? 'white'
+          : 'black';
+      tile.style.color = contrastColor;
+
+      el.colorPalette.appendChild(tile);
+    }
+    updateOutputs();
+  };
+
+  let prevHueSliderValue = 0;
+  let prevLightnessSliderValue = el.lightnessSlider.value;
+
+  el.colorPicker.addEventListener('input', () => {
+    let color = chroma(el.colorPicker.value);
+    el.hueSlider.value = color.get('hsl.h');
+    prevHueSliderValue = el.hueSlider.value;
+    el.startHueSlider.value = el.hueSlider.value;
+    el.endHueSlider.value = el.hueSlider.value;
     updatePalette();
   });
 
-  hueSlider.addEventListener('input', () => {
-    hueOutput.value = hueSlider.value;
-    hueShift = hueSlider.value - prevHueSliderValue;
-    startHueSlider.value = wrapHue(parseInt(startHueSlider.value) + hueShift);
-    endHueSlider.value = wrapHue(parseInt(endHueSlider.value) + hueShift);
-    prevHueSliderValue = hueSlider.value;
-    startHueOutput.value = startHueSlider.value;
-    endHueOutput.value = endHueSlider.value;
-
-    let color = chroma(colorPicker.value);
-    color = color.set('hsl.h', hueSlider.value);
-    colorPicker.value = color.hex();
-    colorOutput.value = colorPicker.value;
+  el.hueSlider.addEventListener('input', () => {
+    const hueShift = el.hueSlider.value - prevHueSliderValue;
+    prevHueSliderValue = el.hueSlider.value;
+    el.startHueSlider.value = wrapHue(
+      parseInt(el.startHueSlider.value) + hueShift
+    );
+    el.endHueSlider.value = wrapHue(parseInt(el.endHueSlider.value) + hueShift);
+    let color = chroma(el.colorPicker.value);
+    color = color.set('hsl.h', el.hueSlider.value);
+    el.colorPicker.value = color.hex();
     updatePalette();
   });
 
-  saturationSlider.addEventListener('input', () => {
-    saturationOutput.value = saturationSlider.value;
-  });
-  lightnessSlider.addEventListener('input', () => {
-    lightnessOutput.value = lightnessSlider.value;
-    lightnessShift = lightnessSlider.value - prevLightnessSliderValue;
-
+  el.lightnessSlider.addEventListener('input', () => {
+    let lightnessShift = el.lightnessSlider.value - prevLightnessSliderValue;
     let newStartLightness =
-      parseFloat(startLightnessSlider.value) + lightnessShift;
-    let newEndLightness = parseFloat(endLightnessSlider.value) + lightnessShift;
+      parseFloat(el.startLightnessSlider.value) + lightnessShift;
+    let newEndLightness =
+      parseFloat(el.endLightnessSlider.value) + lightnessShift;
 
-    newStartLightness = Math.max(0, Math.min(newStartLightness, 2));
-    newEndLightness = Math.max(0, Math.min(newEndLightness, 2));
+    newStartLightness = Math.max(0, Math.min(newStartLightness, 1));
+    newEndLightness = Math.max(0, Math.min(newEndLightness, 1));
 
-    startLightnessSlider.value = newStartLightness;
-    endLightnessSlider.value = newEndLightness;
+    el.startLightnessSlider.value = newStartLightness;
+    el.endLightnessSlider.value = newEndLightness;
 
-    startLightnessOutput.value = startLightnessSlider.value;
-    endLightnessOutput.value = endLightnessSlider.value;
-
-    prevLightnessSliderValue = lightnessSlider.value;
+    prevLightnessSliderValue = el.lightnessSlider.value;
 
     updatePalette();
   });
-  startHueSlider.addEventListener('input', () => {
-    startHueOutput.value = startHueSlider.value;
-  });
-  endHueSlider.addEventListener('input', () => {
-    endHueOutput.value = endHueSlider.value;
-  });
-  startLightnessSlider.addEventListener('input', () => {
-    startLightnessOutput.value = startLightnessSlider.value;
-    updatePalette();
-  });
-  endLightnessSlider.addEventListener('input', () => {
-    endLightnessOutput.value = endLightnessSlider.value;
-    updatePalette();
-  });
-  saturationSlider.addEventListener('input', updatePalette);
-  colorPicker.addEventListener('input', () => {
-    const color = chroma(colorPicker.value);
-    const saturation = Math.round(color.get('hsl.s') * 100);
-    const hue = Math.round(color.get('hsl.h'));
-    saturationSlider.value = saturation;
-    hueSlider.value = hue;
-    startHueSlider.value = hue;
-    endHueSlider.value = hue;
-    prevHueSliderValue = hueSlider.value;
-    updatePalette();
-  });
-  lightnessSlider.addEventListener('input', updatePalette);
-  hueSlider.addEventListener('input', () => {
-    hueShift = hueSlider.value - prevHueSliderValue;
-    startHueSlider.value = wrapHue(parseInt(startHueSlider.value) + hueShift);
-    endHueSlider.value = wrapHue(parseInt(endHueSlider.value) + hueShift);
-    prevHueSliderValue = hueSlider.value;
-    startHueOutput.value = startHueSlider.value;
-    endHueOutput.value = endHueSlider.value;
-    updatePalette();
-  });
-  startHueSlider.addEventListener('input', updatePalette);
-  endHueSlider.addEventListener('input', updatePalette);
-  numTilesSlider.addEventListener('input', () => {
-    updatePalette();
-    document.querySelector('#num-tiles-value').innerText = numTilesSlider.value;
-  });
+  el.startHueSlider.addEventListener('input', updatePalette);
+  el.endHueSlider.addEventListener('input', updatePalette);
+  el.chromaSlider.addEventListener('input', updatePalette);
+  el.startLightnessSlider.addEventListener('input', updatePalette);
+  el.endLightnessSlider.addEventListener('input', updatePalette);
+  el.numTilesSlider.addEventListener('input', updatePalette);
 
-  startHueOutput.value = startHueSlider.value;
-  endHueOutput.value = endHueSlider.value;
+  el.colorPicker.dispatchEvent(new Event('input'));
 
-  hueSlider.dispatchEvent(new Event('input'));
-  saturationSlider.dispatchEvent(new Event('input'));
-  lightnessSlider.dispatchEvent(new Event('input'));
-  startHueSlider.dispatchEvent(new Event('input'));
-  endHueSlider.dispatchEvent(new Event('input'));
-  startLightnessSlider.dispatchEvent(new Event('input'));
-  endLightnessSlider.dispatchEvent(new Event('input'));
+  el.colorPicker.addEventListener('input', updatePalette);
+  el.startHueSlider.addEventListener('input', updatePalette);
+  el.endHueSlider.addEventListener('input', updatePalette);
+  el.chromaSlider.addEventListener('input', updatePalette);
+  el.numTilesSlider.addEventListener('input', () => {
+    updatePalette();
+  });
+  el.startLightnessSlider.addEventListener('input', updatePalette);
+  el.endLightnessSlider.addEventListener('input', updatePalette);
 
   updatePalette();
-  document.querySelector('#num-tiles-value').innerText = numTilesSlider.value;
 };
