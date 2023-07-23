@@ -6,11 +6,12 @@ window.onload = () => {
     chromaSlider: '#chroma-slider',
     numTilesSlider: '#num-tiles-slider',
     colorPalette: '#color-palette',
-    numTilesValue: '#num-tiles-value',
     startLightnessSlider: '#start-lightness-slider',
     endLightnessSlider: '#end-lightness-slider',
     hueSlider: '#hue-slider',
     lightnessSlider: '#lightness-slider',
+    startHueOutput: '#start-hue-output',
+    endHueOutput: '#end-hue-output',
   };
 
   const wrapHue = hue => ((hue % 360) + 360) % 360;
@@ -53,7 +54,7 @@ window.onload = () => {
         chroma(el.colorPicker.value)
           .set('oklch.h', startHue + hueStep * i)
           .set('oklch.l', startLightness + lightnessStep * i)
-          .set('oklch.c', chromaValue) // Set chroma
+          .set('oklch.c', chromaValue)
       );
     }
 
@@ -79,7 +80,7 @@ window.onload = () => {
 
       const hexCode = document.createElement('div');
       hexCode.className = 'color-hex';
-      hexCode.textContent = colorScale[i].substring(1); // Strip the # from the hex code
+      hexCode.textContent = colorScale[i].substring(1);
       tile.appendChild(hexCode);
 
       el.colorPalette.appendChild(tile);
@@ -91,11 +92,7 @@ window.onload = () => {
   let prevLightnessSliderValue = el.lightnessSlider.value;
 
   el.colorPicker.addEventListener('input', () => {
-    let color = chroma(el.colorPicker.value);
-    el.hueSlider.value = color.get('hsl.h');
     prevHueSliderValue = el.hueSlider.value;
-    el.startHueSlider.value = el.hueSlider.value;
-    el.endHueSlider.value = el.hueSlider.value;
     updatePalette();
   });
 
@@ -107,7 +104,7 @@ window.onload = () => {
     );
     el.endHueSlider.value = wrapHue(parseInt(el.endHueSlider.value) + hueShift);
     let color = chroma(el.colorPicker.value);
-    color = color.set('hsl.h', el.hueSlider.value);
+    color = color.set('oklch.h', el.hueSlider.value);
     el.colorPicker.value = color.hex();
     updatePalette();
   });
@@ -129,24 +126,33 @@ window.onload = () => {
 
     updatePalette();
   });
-  el.startHueSlider.addEventListener('input', updatePalette);
-  el.endHueSlider.addEventListener('input', updatePalette);
+
+  el.startHueSlider.addEventListener('input', () => {
+    el.startHueOutput.value = el.startHueSlider.value;
+    updatePalette();
+  });
+  el.endHueSlider.addEventListener('input', () => {
+    el.endHueOutput.value = el.endHueSlider.value;
+    updatePalette();
+  });
   el.chromaSlider.addEventListener('input', updatePalette);
   el.startLightnessSlider.addEventListener('input', updatePalette);
   el.endLightnessSlider.addEventListener('input', updatePalette);
   el.numTilesSlider.addEventListener('input', updatePalette);
-
-  el.colorPicker.dispatchEvent(new Event('input'));
-
   el.colorPicker.addEventListener('input', updatePalette);
-  el.startHueSlider.addEventListener('input', updatePalette);
-  el.endHueSlider.addEventListener('input', updatePalette);
-  el.chromaSlider.addEventListener('input', updatePalette);
   el.numTilesSlider.addEventListener('input', () => {
     updatePalette();
   });
-  el.startLightnessSlider.addEventListener('input', updatePalette);
-  el.endLightnessSlider.addEventListener('input', updatePalette);
+
+  el.colorPicker.dispatchEvent(new Event('input'));
+  el.numTilesSlider.dispatchEvent(new Event('input'));
+  el.hueSlider.dispatchEvent(new Event('input'));
+  el.startHueSlider.dispatchEvent(new Event('input'));
+  el.endHueSlider.dispatchEvent(new Event('input'));
+  el.chromaSlider.dispatchEvent(new Event('input'));
+  el.lightnessSlider.dispatchEvent(new Event('input'));
+  el.startLightnessSlider.dispatchEvent(new Event('input'));
+  el.endLightnessSlider.dispatchEvent(new Event('input'));
 
   updatePalette();
 };
