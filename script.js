@@ -71,6 +71,17 @@ window.onload = () => {
           : 'black';
       tile.style.color = contrastColor;
 
+      const contrastCode = document.createElement('div');
+      contrastCode.textContent = `${chroma
+        .contrast(colorScale[i], contrastColor)
+        .toFixed(1)}`;
+      tile.appendChild(contrastCode);
+
+      const hexCode = document.createElement('div');
+      hexCode.className = 'color-hex';
+      hexCode.textContent = colorScale[i].substring(1); // Strip the # from the hex code
+      tile.appendChild(hexCode);
+
       el.colorPalette.appendChild(tile);
     }
     updateOutputs();
