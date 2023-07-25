@@ -30,10 +30,6 @@ h1 {
   max-width: 60ch;
 }
 
-label {
-  font-weight: bold;
-}
-
 .label-wrapper {
   display: flex;
   flex-direction: row;
@@ -71,6 +67,12 @@ label {
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+.control-section-header {
+  font-weight: 700;
+  padding-top: 20px;
+  border-top: #cacaca 1px solid;
 }
 
 input {

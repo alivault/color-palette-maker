@@ -26,17 +26,6 @@
         </div>
         </div>
         <div class="controls">
-          <div class="control color-picker-wrapper">
-            <label for="color-picker">Color</label>
-            <input
-              class="color-picker"
-              id="color-picker"
-              type="color"
-              name="color-picker"
-              value="#243f98"
-            />
-            <output id="color-output"></output>
-          </div>
           <div class="control">
             <div class="label-wrapper"><label for="num-tiles-slider">Number of tiles</label><output id="num-tiles-output"></output></div>
             <input
@@ -48,43 +37,52 @@
               value="28"
             />
           </div>
+          <div class="control-section-header">
+            Hue
+          </div>
           <div class="control">
-            <div class="label-wrapper"><label for="hue-slider">Hue</label>
+            <div class="label-wrapper"><label for="hue-slider">Hue Shift</label>
               <output id="hue-output"></output>
             </div>
-            <input id="hue-slider" type="range" min="0" max="360" value="180" />
+            <input id="hue-slider" type="range" min="0" max="360" step="1" value="180" />
           </div>
           <div class="control">
             <div class="label-wrapper">
-              <label for="start-hue-slider">Start Hue</label>
+              <label for="start-hue-slider">Hue Start</label>
               <output id="start-hue-output"></output>
             </div>
-            <input id="start-hue-slider" type="range" min="0" max="360" step="1" value="0" />
+            <input id="start-hue-slider" type="range" min="0" max="360" step="1" value="90" />
           </div>
           <div class="control">
             <div class="label-wrapper">
-              <label for="end-hue-slider">End Hue</label>
+              <label for="end-hue-slider">Hue End</label>
               <output id="end-hue-output"></output>
             </div>
-            <input id="end-hue-slider" type="range" min="0" max="360" step="1" value="359" />
+            <input id="end-hue-slider" type="range" min="0" max="360" step="1" value="260" />
+          </div>
+          <div class="control-section-header">
+            Saturation
           </div>
           <div class="control">
             <div class="label-wrapper">
-              <label for="chroma-slider">Chroma</label>
-              <output id="chroma-output"></output>
+              <label for="saturation-slider">Saturation</label>
+              <output id="saturation-output"></output>
             </div>
             <input
-              id="chroma-slider"
+              id="saturation-slider"
               type="range"
               min="0"
-              max="0.37"
+              max="1"
               step="0.01"
-              value="0.18"
+              value="0.5"
             />
+          </div>
+          <div class="control-section-header">
+            Lightness
           </div>
           <div class="control">
             <div class="label-wrapper">
-              <label for="lightness-slider">Lightness</label>
+              <label for="lightness-slider">Shift Lightness</label>
               <output id="lightness-output"></output>
             </div>
             <input
@@ -98,17 +96,23 @@
           </div>
           <div class="control">
             <div class="label-wrapper">
-              <label for="start-lightness-slider">Start Lightness</label>
+              <label for="start-lightness-slider">Lightness Start</label>
               <output id="start-lightness-output"></output>
             </div>
-            <input id="start-lightness-slider" type="range" min="0" max="1" step="0.01" value="0.9" />
+            <input id="start-lightness-slider" type="range" min="0"
+            max="1"
+            step="0.01"
+            value="0.5" />
           </div>
           <div class="control">
             <div class="label-wrapper">
-              <label for="end-lightness-slider">End Lightness</label>
+              <label for="end-lightness-slider">Lightness End</label>
               <output id="end-lightness-output"></output>
             </div>
-            <input id="end-lightness-slider" type="range" min="0" max="1" step="0.01" value="0.2" />
+            <input id="end-lightness-slider" type="range" min="0"
+            max="1"
+            step="0.01"
+            value="0.5" />
           </div>
         </div>
       </div>
