@@ -1,16 +1,26 @@
 window.onload = () => {
   const selectors = {
+    colorPalette: '#color-palette',
+    numTilesSlider: '#num-tiles-slider',
+    numTilesOutput: '#num-tiles-output',
+    hueSlider: '#hue-slider',
+    hueOutput: '#hue-output',
     startHueSlider: '#start-hue-slider',
     endHueSlider: '#end-hue-slider',
-    saturationSlider: '#saturation-slider',
-    numTilesSlider: '#num-tiles-slider',
-    colorPalette: '#color-palette',
-    startLightnessSlider: '#start-lightness-slider',
-    endLightnessSlider: '#end-lightness-slider',
-    hueSlider: '#hue-slider',
-    lightnessSlider: '#lightness-slider',
     startHueOutput: '#start-hue-output',
     endHueOutput: '#end-hue-output',
+    saturationSlider: '#saturation-slider',
+    saturationOutput: '#saturation-output',
+    startSaturationSlider: '#start-saturation-slider',
+    endSaturationSlider: '#end-saturation-slider',
+    startSaturationOutput: '#start-saturation-output',
+    endSaturationOutput: '#end-saturation-output',
+    lightnessSlider: '#lightness-slider',
+    lightnessOutput: '#lightness-output',
+    startLightnessSlider: '#start-lightness-slider',
+    endLightnessSlider: '#end-lightness-slider',
+    startLightnessOutput: '#start-lightness-output',
+    endLightnessOutput: '#end-lightness-output',
   };
 
   const el = Object.keys(selectors).reduce((acc, selector) => {
@@ -20,19 +30,16 @@ window.onload = () => {
 
   const updateOutputs = () => {
     const hueShift = el.hueSlider.value - 180;
-    document.querySelector('#hue-output').value =
-      hueShift > 0 ? `+${hueShift}` : hueShift;
-    document.querySelector('#start-hue-output').value = el.startHueSlider.value;
-    document.querySelector('#end-hue-output').value = el.endHueSlider.value;
-    document.querySelector('#lightness-output').value =
-      el.lightnessSlider.value;
-    document.querySelector('#start-lightness-output').value =
-      el.startLightnessSlider.value;
-    document.querySelector('#end-lightness-output').value =
-      el.endLightnessSlider.value;
-    document.querySelector('#saturation-output').value =
-      el.saturationSlider.value;
-    document.querySelector('#num-tiles-output').value = el.numTilesSlider.value;
+    el.hueOutput.value = hueShift > 0 ? `+${hueShift}` : hueShift;
+    el.startHueOutput.value = el.startHueSlider.value;
+    el.endHueOutput.value = el.endHueSlider.value;
+    el.lightnessOutput.value = el.lightnessSlider.value;
+    el.startLightnessOutput.value = el.startLightnessSlider.value;
+    el.endLightnessOutput.value = el.endLightnessSlider.value;
+    el.saturationOutput.value = el.saturationSlider.value;
+    el.numTilesOutput.value = el.numTilesSlider.value;
+    el.startSaturationOutput.value = el.startSaturationSlider.value;
+    el.endSaturationOutput.value = el.endSaturationSlider.value;
   };
 
   const wrapHue = hue => ((hue % 360) + 360) % 360;
@@ -42,12 +49,13 @@ window.onload = () => {
 
     const startColor = chroma.hsl(
       parseFloat(el.startHueSlider.value),
-      parseFloat(el.saturationSlider.value),
+      parseFloat(el.startSaturationSlider.value),
       parseFloat(el.startLightnessSlider.value)
     );
+
     const endColor = chroma.hsl(
       parseFloat(el.endHueSlider.value),
-      parseFloat(el.saturationSlider.value),
+      parseFloat(el.endSaturationSlider.value),
       parseFloat(el.endLightnessSlider.value)
     );
 
@@ -87,8 +95,10 @@ window.onload = () => {
     updateOutputs();
   };
 
-  let prevHueSliderValue = parseFloat(el.hueSlider.value);
-  let prevLightnessSliderValue = el.lightnessSlider.value;
+  el.numTilesSlider.addEventListener('input', updatePalette);
+  el.numTilesSlider.addEventListener('input', () => {
+    updatePalette();
+  });
 
   el.hueSlider.addEventListener('input', () => {
     const hueShift = el.hueSlider.value - prevHueSliderValue;
@@ -97,6 +107,14 @@ window.onload = () => {
       parseInt(el.startHueSlider.value) + hueShift
     );
     el.endHueSlider.value = wrapHue(parseInt(el.endHueSlider.value) + hueShift);
+    updatePalette();
+  });
+  el.startHueSlider.addEventListener('input', () => {
+    el.startHueOutput.value = el.startHueSlider.value;
+    updatePalette();
+  });
+  el.endHueSlider.addEventListener('input', () => {
+    el.endHueOutput.value = el.endHueSlider.value;
     updatePalette();
   });
 
@@ -117,20 +135,32 @@ window.onload = () => {
 
     updatePalette();
   });
-
-  el.startHueSlider.addEventListener('input', () => {
-    el.startHueOutput.value = el.startHueSlider.value;
-    updatePalette();
-  });
-  el.endHueSlider.addEventListener('input', () => {
-    el.endHueOutput.value = el.endHueSlider.value;
-    updatePalette();
-  });
-  el.saturationSlider.addEventListener('input', updatePalette);
   el.startLightnessSlider.addEventListener('input', updatePalette);
   el.endLightnessSlider.addEventListener('input', updatePalette);
-  el.numTilesSlider.addEventListener('input', updatePalette);
-  el.numTilesSlider.addEventListener('input', () => {
+
+  el.saturationSlider.addEventListener('input', () => {
+    let saturationShift = el.saturationSlider.value - prevSaturationSliderValue;
+    let newStartSaturation =
+      parseFloat(el.startSaturationSlider.value) + saturationShift;
+    let newEndSaturation =
+      parseFloat(el.endSaturationSlider.value) + saturationShift;
+
+    newStartSaturation = Math.max(0, Math.min(newStartSaturation, 1));
+    newEndSaturation = Math.max(0, Math.min(newEndSaturation, 1));
+
+    el.startSaturationSlider.value = newStartSaturation;
+    el.endSaturationSlider.value = newEndSaturation;
+
+    prevSaturationSliderValue = el.saturationSlider.value;
+
+    updatePalette();
+  });
+  el.startSaturationSlider.addEventListener('input', () => {
+    el.startSaturationOutput.value = el.startSaturationSlider.value;
+    updatePalette();
+  });
+  el.endSaturationSlider.addEventListener('input', () => {
+    el.endSaturationOutput.value = el.endSaturationSlider.value;
     updatePalette();
   });
 
@@ -139,9 +169,15 @@ window.onload = () => {
   el.startHueSlider.value = 31;
   el.endHueSlider.value = 243;
   el.saturationSlider.value = 1;
+  el.startSaturationSlider.value = 1;
+  el.endSaturationSlider.value = 1;
   el.lightnessSlider.value = 0.5;
   el.startLightnessSlider.value = 0.8;
   el.endLightnessSlider.value = 0.4;
+
+  let prevHueSliderValue = parseFloat(el.hueSlider.value);
+  let prevLightnessSliderValue = el.lightnessSlider.value;
+  let prevSaturationSliderValue = el.saturationSlider.value;
 
   updatePalette();
 };

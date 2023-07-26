@@ -34,7 +34,6 @@
               min="2"
               max="96"
               step="1"
-              value="28"
             />
           </div>
           <div class="control-section-header">
@@ -44,28 +43,28 @@
             <div class="label-wrapper"><label for="hue-slider">Hue Shift</label>
               <output id="hue-output"></output>
             </div>
-            <input id="hue-slider" type="range" min="0" max="360" step="1" value="180" />
+            <input id="hue-slider" type="range" min="0" max="360" step="1" />
           </div>
           <div class="control">
             <div class="label-wrapper">
               <label for="start-hue-slider">Hue Start</label>
               <output id="start-hue-output"></output>
             </div>
-            <input id="start-hue-slider" type="range" min="0" max="360" step="1" value="90" />
+            <input id="start-hue-slider" type="range" min="0" max="360" step="1" />
           </div>
           <div class="control">
             <div class="label-wrapper">
               <label for="end-hue-slider">Hue End</label>
               <output id="end-hue-output"></output>
             </div>
-            <input id="end-hue-slider" type="range" min="0" max="360" step="1" value="260" />
+            <input id="end-hue-slider" type="range" min="0" max="360" step="1" />
           </div>
           <div class="control-section-header">
             Saturation
           </div>
           <div class="control">
             <div class="label-wrapper">
-              <label for="saturation-slider">Saturation</label>
+              <label for="saturation-slider">Saturation Shift</label>
               <output id="saturation-output"></output>
             </div>
             <input
@@ -74,15 +73,28 @@
               min="0"
               max="1"
               step="0.01"
-              value="0.5"
             />
+          </div>
+          <div class="control">
+            <div class="label-wrapper">
+              <label for="start-saturation-slider">Saturation Start</label>
+              <output id="start-saturation-output"></output>
+            </div>
+            <input type="range" id="start-saturation-slider" min="0" max="1" step="0.01">
+          </div>
+          <div class="control">
+            <div class="label-wrapper">
+              <label for="end-saturation-slider">Saturation End</label>
+              <output id="end-saturation-output"></output>
+            </div>
+            <input type="range" id="end-saturation-slider" min="0" max="1" step="0.01">
           </div>
           <div class="control-section-header">
             Lightness
           </div>
           <div class="control">
             <div class="label-wrapper">
-              <label for="lightness-slider">Shift Lightness</label>
+              <label for="lightness-slider">Lightness Shift</label>
               <output id="lightness-output"></output>
             </div>
             <input
@@ -91,7 +103,6 @@
               min="0"
               max="1"
               step="0.01"
-              value="0.5"
             />
           </div>
           <div class="control">
@@ -101,8 +112,7 @@
             </div>
             <input id="start-lightness-slider" type="range" min="0"
             max="1"
-            step="0.01"
-            value="0.5" />
+            step="0.01" />
           </div>
           <div class="control">
             <div class="label-wrapper">
@@ -111,8 +121,7 @@
             </div>
             <input id="end-lightness-slider" type="range" min="0"
             max="1"
-            step="0.01"
-            value="0.5" />
+            step="0.01" />
           </div>
         </div>
       </div>
