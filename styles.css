@@ -1,3 +1,8 @@
+:root {
+  --start-hue-thumb: hsl(0, 100%, 50%);
+  --end-hue-thumb: hsl(0, 100%, 50%);
+}
+
 body {
   font-family: system-ui, sans-serif;
   margin: 0;
@@ -162,6 +167,14 @@ output {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: transparent;
-  border: 2px solid black;
+  border: 2px solid white;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+}
+
+#start-hue-slider::-webkit-slider-thumb {
+  background-color: var(--start-hue-thumb);
+}
+
+#end-hue-slider::-webkit-slider-thumb {
+  background-color: var(--end-hue-thumb);
 }
