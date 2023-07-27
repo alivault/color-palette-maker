@@ -108,6 +108,7 @@ window.onload = () => {
     );
     el.endHueSlider.value = wrapHue(parseInt(el.endHueSlider.value) + hueShift);
     updatePalette();
+    updateSliderThumbColors();
   });
   el.startHueSlider.addEventListener('input', () => {
     el.startHueOutput.value = el.startHueSlider.value;
@@ -164,6 +165,23 @@ window.onload = () => {
     updatePalette();
   });
 
+  function updateSliderThumbColors() {
+    const hueStart = el.startHueSlider.value;
+    const hueEnd = el.endHueSlider.value;
+
+    document.documentElement.style.setProperty(
+      '--start-hue-thumb',
+      `hsl(${hueStart}, 100%, 50%)`
+    );
+    document.documentElement.style.setProperty(
+      '--end-hue-thumb',
+      `hsl(${hueEnd}, 100%, 50%)`
+    );
+  }
+
+  el.startHueSlider.addEventListener('input', updateSliderThumbColors);
+  el.endHueSlider.addEventListener('input', updateSliderThumbColors);
+
   el.numTilesSlider.value = 12;
   el.hueSlider.value = 180;
   el.startHueSlider.value = 31;
@@ -180,4 +198,5 @@ window.onload = () => {
   let prevSaturationSliderValue = el.saturationSlider.value;
 
   updatePalette();
+  updateSliderThumbColors();
 };
