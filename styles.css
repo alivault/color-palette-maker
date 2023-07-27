@@ -162,13 +162,23 @@ output {
 #start-hue-slider::-webkit-slider-thumb,
 #end-hue-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 1), 0 0 2px 2px rgba(0, 0, 0, 0.8);
+}
+
+#start-hue-slider::-moz-range-thumb,
+#end-hue-slider::-moz-range-thumb {
   -moz-appearance: none;
   appearance: none;
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  border: 2px solid white;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+  border: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 1), 0 0 2px 2px rgba(0, 0, 0, 0.8);
 }
 
 #start-hue-slider::-webkit-slider-thumb {
@@ -176,5 +186,13 @@ output {
 }
 
 #end-hue-slider::-webkit-slider-thumb {
+  background-color: var(--end-hue-thumb);
+}
+
+#start-hue-slider::-moz-range-thumb {
+  background-color: var(--start-hue-thumb);
+}
+
+#end-hue-slider::-moz-range-thumb {
   background-color: var(--end-hue-thumb);
 }
