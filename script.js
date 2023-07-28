@@ -98,6 +98,10 @@ window.onload = () => {
   function updateSliderBackgroundsAndThumbColors() {
     const hueStart = el.startHueSlider.value;
     const hueEnd = el.endHueSlider.value;
+    const saturationStart = el.startSaturationSlider.value;
+    const saturationEnd = el.endSaturationSlider.value;
+    const lightnessStart = el.startLightnessSlider.value;
+    const lightnessEnd = el.endLightnessSlider.value;
 
     document.documentElement.style.setProperty(
       '--start-hue-thumb',
@@ -111,8 +115,17 @@ window.onload = () => {
     el.startSaturationSlider.style.background = `linear-gradient(to right, hsl(${hueStart}, 0%, 50%), hsl(${hueStart}, 100%, 50%))`;
     el.endSaturationSlider.style.background = `linear-gradient(to right, hsl(${hueEnd}, 0%, 50%), hsl(${hueEnd}, 100%, 50%))`;
 
-    const saturationStart = el.startSaturationSlider.value;
-    const saturationEnd = el.endSaturationSlider.value;
+    el.startLightnessSlider.style.background = `linear-gradient(to right, hsl(${hueStart}, ${
+      saturationStart * 100
+    }%, 0%), hsl(${hueStart}, ${
+      saturationStart * 100
+    }%, 50%), hsl(${hueStart}, ${saturationStart * 100}%, 100%))`;
+    el.endLightnessSlider.style.background = `linear-gradient(to right, hsl(${hueEnd}, ${
+      saturationEnd * 100
+    }%, 0%), hsl(${hueEnd}, ${saturationEnd * 100}%, 50%), hsl(${hueEnd}, ${
+      saturationEnd * 100
+    }%, 100%))`;
+
     document.documentElement.style.setProperty(
       '--start-saturation-thumb',
       `hsl(${hueStart}, ${saturationStart * 100}%, 50%)`
@@ -121,12 +134,18 @@ window.onload = () => {
       '--end-saturation-thumb',
       `hsl(${hueEnd}, ${saturationEnd * 100}%, 50%)`
     );
+
+    document.documentElement.style.setProperty(
+      '--start-lightness-thumb',
+      `hsl(${hueStart}, ${saturationStart * 100}%, ${lightnessStart * 100}%)`
+    );
+    document.documentElement.style.setProperty(
+      '--end-lightness-thumb',
+      `hsl(${hueEnd}, ${saturationEnd * 100}%, ${lightnessEnd * 100}%)`
+    );
   }
 
   el.numTilesSlider.addEventListener('input', updatePalette);
-  el.numTilesSlider.addEventListener('input', () => {
-    updatePalette();
-  });
 
   el.hueSlider.addEventListener('input', () => {
     const hueShift = el.hueSlider.value - prevHueSliderValue;
@@ -165,9 +184,18 @@ window.onload = () => {
     prevLightnessSliderValue = el.lightnessSlider.value;
 
     updatePalette();
+    updateSliderBackgroundsAndThumbColors();
   });
-  el.startLightnessSlider.addEventListener('input', updatePalette);
-  el.endLightnessSlider.addEventListener('input', updatePalette);
+  el.startLightnessSlider.addEventListener('input', () => {
+    el.startLightnessOutput.value = el.startLightnessSlider.value;
+    updatePalette();
+    updateSliderBackgroundsAndThumbColors();
+  });
+  el.endLightnessSlider.addEventListener('input', () => {
+    el.endLightnessOutput.value = el.endLightnessSlider.value;
+    updatePalette();
+    updateSliderBackgroundsAndThumbColors();
+  });
 
   el.saturationSlider.addEventListener('input', () => {
     let saturationShift = el.saturationSlider.value - prevSaturationSliderValue;
