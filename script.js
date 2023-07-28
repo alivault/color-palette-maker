@@ -95,6 +95,34 @@ window.onload = () => {
     updateOutputs();
   };
 
+  function updateSliderBackgroundsAndThumbColors() {
+    const hueStart = el.startHueSlider.value;
+    const hueEnd = el.endHueSlider.value;
+
+    document.documentElement.style.setProperty(
+      '--start-hue-thumb',
+      `hsl(${hueStart}, 100%, 50%)`
+    );
+    document.documentElement.style.setProperty(
+      '--end-hue-thumb',
+      `hsl(${hueEnd}, 100%, 50%)`
+    );
+
+    el.startSaturationSlider.style.background = `linear-gradient(to right, hsl(${hueStart}, 0%, 50%), hsl(${hueStart}, 100%, 50%))`;
+    el.endSaturationSlider.style.background = `linear-gradient(to right, hsl(${hueEnd}, 0%, 50%), hsl(${hueEnd}, 100%, 50%))`;
+
+    const saturationStart = el.startSaturationSlider.value;
+    const saturationEnd = el.endSaturationSlider.value;
+    document.documentElement.style.setProperty(
+      '--start-saturation-thumb',
+      `hsl(${hueStart}, ${saturationStart * 100}%, 50%)`
+    );
+    document.documentElement.style.setProperty(
+      '--end-saturation-thumb',
+      `hsl(${hueEnd}, ${saturationEnd * 100}%, 50%)`
+    );
+  }
+
   el.numTilesSlider.addEventListener('input', updatePalette);
   el.numTilesSlider.addEventListener('input', () => {
     updatePalette();
@@ -108,15 +136,17 @@ window.onload = () => {
     );
     el.endHueSlider.value = wrapHue(parseInt(el.endHueSlider.value) + hueShift);
     updatePalette();
-    updateSliderThumbColors();
+    updateSliderBackgroundsAndThumbColors();
   });
   el.startHueSlider.addEventListener('input', () => {
     el.startHueOutput.value = el.startHueSlider.value;
     updatePalette();
+    updateSliderBackgroundsAndThumbColors();
   });
   el.endHueSlider.addEventListener('input', () => {
     el.endHueOutput.value = el.endHueSlider.value;
     updatePalette();
+    updateSliderBackgroundsAndThumbColors();
   });
 
   el.lightnessSlider.addEventListener('input', () => {
@@ -155,32 +185,18 @@ window.onload = () => {
     prevSaturationSliderValue = el.saturationSlider.value;
 
     updatePalette();
+    updateSliderBackgroundsAndThumbColors();
   });
   el.startSaturationSlider.addEventListener('input', () => {
     el.startSaturationOutput.value = el.startSaturationSlider.value;
     updatePalette();
+    updateSliderBackgroundsAndThumbColors();
   });
   el.endSaturationSlider.addEventListener('input', () => {
     el.endSaturationOutput.value = el.endSaturationSlider.value;
     updatePalette();
+    updateSliderBackgroundsAndThumbColors();
   });
-
-  function updateSliderThumbColors() {
-    const hueStart = el.startHueSlider.value;
-    const hueEnd = el.endHueSlider.value;
-
-    document.documentElement.style.setProperty(
-      '--start-hue-thumb',
-      `hsl(${hueStart}, 100%, 50%)`
-    );
-    document.documentElement.style.setProperty(
-      '--end-hue-thumb',
-      `hsl(${hueEnd}, 100%, 50%)`
-    );
-  }
-
-  el.startHueSlider.addEventListener('input', updateSliderThumbColors);
-  el.endHueSlider.addEventListener('input', updateSliderThumbColors);
 
   el.numTilesSlider.value = 12;
   el.hueSlider.value = 180;
@@ -198,5 +214,5 @@ window.onload = () => {
   let prevSaturationSliderValue = el.saturationSlider.value;
 
   updatePalette();
-  updateSliderThumbColors();
+  updateSliderBackgroundsAndThumbColors();
 };

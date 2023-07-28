@@ -1,6 +1,8 @@
 :root {
   --start-hue-thumb: hsl(0, 100%, 50%);
   --end-hue-thumb: hsl(0, 100%, 50%);
+  --start-saturation-thumb: hsl(0, 100%, 50%);
+  --end-saturation-thumb: hsl(0, 100%, 50%);
 }
 
 body {
@@ -138,6 +140,38 @@ output {
   font-variant: tabular-nums;
 }
 
+input[type='range'] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 16px;
+  background: linear-gradient(to bottom, #777777 0%, #cacaca 100%);
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 1), 0 0 2px 2px rgba(0, 0, 0, 0.8);
+  background-color: #ffffff;
+}
+
+input[type='range']::-moz-range-thumb {
+  -moz-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 1), 0 0 2px 2px rgba(0, 0, 0, 0.8);
+  background-color: #ffffff;
+}
+
 #start-hue-slider,
 #end-hue-slider {
   -webkit-appearance: none;
@@ -195,4 +229,52 @@ output {
 
 #end-hue-slider::-moz-range-thumb {
   background-color: var(--end-hue-thumb);
+}
+
+#start-saturation-slider,
+#end-saturation-slider {
+  background: linear-gradient(to right, hsl(0, 0%, 50%), hsl(0, 100%, 50%));
+  height: 8px;
+  width: 100%;
+  outline: none;
+  appearance: none;
+  border-radius: 5px;
+}
+
+#start-saturation-slider::-webkit-slider-thumb,
+#end-saturation-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 1), 0 0 2px 2px rgba(0, 0, 0, 0.8);
+}
+
+#start-saturation-slider::-moz-range-thumb,
+#end-saturation-slider::-moz-range-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 1), 0 0 2px 2px rgba(0, 0, 0, 0.8);
+}
+
+#start-saturation-slider::-webkit-slider-thumb {
+  background-color: var(--start-saturation-thumb);
+}
+
+#end-saturation-slider::-webkit-slider-thumb {
+  background-color: var(--end-saturation-thumb);
+}
+
+#end-saturation-slider::-moz-range-thumb {
+  background-color: var(--end-saturation-thumb);
+}
+
+#start-saturation-slider::-moz-range-thumb {
+  background-color: var(--start-saturation-thumb);
 }
