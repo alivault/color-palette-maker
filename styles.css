@@ -10,6 +10,9 @@
   --border: #cacaca;
   --slider-border: rgba(0, 0, 0, 0.5);
   --slider-bg: linear-gradient(to bottom, #777777 0%, #cacaca 100%);
+  --button-bg: rgba(0, 0, 0, 0.1);
+  --button-bg-hover: rgba(0, 0, 0, 0.2);
+  --button-bg-active: rgba(0, 0, 0, 0.3);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,6 +22,9 @@
     --border: #424242;
     --slider-border: rgba(255, 255, 255, 0.5);
     --slider-bg: linear-gradient(to bottom, #333333 0%, #727272 100%);
+    --button-bg: rgba(255, 255, 255, 0.1);
+    --button-bg-hover: rgba(255, 255, 255, 0.2);
+    --button-bg-active: rgba(255, 255, 255, 0.3);
   }
 }
 
@@ -79,14 +85,69 @@ h1 {
 }
 
 .controls {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 20px;
   padding: 20px;
   overflow-y: auto;
   width: 280px;
+  height: 100%;
   border-left: var(--border) 1px solid;
   min-height: 100%;
+  position: fixed;
+  top: 0;
+  right: -280px;
+  transition: right 0.2s ease-in-out;
+  background-color: var(--background);
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .controls {
+    position: static;
+    right: 0;
+  }
+}
+
+.sidebar-toggle {
+  display: none;
+  padding: 16px;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: var(--button-bg);
+  border: none;
+  color: var(--foreground);
+  font-size: 1rem;
+  transition: background-color 0.2s ease-out;
+}
+
+.sidebar-toggle:hover {
+  background-color: var(--button-bg-hover);
+}
+
+.sidebar-toggle:active {
+  background-color: var(--button-bg-active);
+}
+
+@media (max-width: 767px) {
+  .sidebar-toggle {
+    display: block;
+  }
+}
+
+#overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
 }
 
 .control {
