@@ -42,8 +42,8 @@ body {
 .main {
   display: flex;
   flex-direction: row;
-  width: 100vw;
-  height: 100vh;
+  width: 100dvw;
+  height: 100dvh;
 }
 
 h1,
@@ -86,6 +86,7 @@ h1 {
   gap: 20px;
   padding: 20px;
   width: 100%;
+  height: 100%;
   overflow-x: auto;
 }
 
@@ -107,17 +108,8 @@ h1 {
   height: 100%;
 }
 
-@media (min-width: 768px) {
-  .controls {
-    position: static;
-    right: 0;
-    align-self: stretch;
-    height: auto;
-  }
-}
-
 .sticky-bar {
-  position: fixed;
+  position: sticky;
   display: none;
   flex-direction: row;
   justify-content: space-between;
@@ -131,12 +123,6 @@ h1 {
   left: 0;
   right: 0;
   z-index: 1;
-}
-
-@media (max-width: 767px) {
-  .sticky-bar {
-    display: flex;
-  }
 }
 
 .sidebar-toggle {
@@ -232,12 +218,6 @@ h1 {
   gap: 4px;
   align-self: stretch;
   height: 100%;
-}
-
-@media (max-width: 767px) {
-  .palette-grid {
-    padding-bottom: 80px;
-  }
 }
 
 .color-hex {
@@ -350,4 +330,22 @@ input[type='range']::-moz-range-thumb {
 
 #end-lightness-slider::-moz-range-thumb {
   background: var(--end-lightness-thumb);
+}
+
+@media (max-width: 767px) {
+  .main {
+    flex-direction: column;
+  }
+  .sticky-bar {
+    display: flex;
+  }
+}
+
+@media (min-width: 768px) {
+  .controls {
+    position: static;
+    right: 0;
+    align-self: stretch;
+    height: auto;
+  }
 }
