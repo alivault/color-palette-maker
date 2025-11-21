@@ -1,0 +1,15 @@
+# shadcn instructions
+
+Use the latest version of Shadcn to install new components, like this command to add a button component:
+
+```bash
+pnpx shadcn@latest add button
+```
+
+# Typescript instructions
+
+Do not use any type.
+
+# usememo instructions
+
+Do not use useMemo hook unless necessary. We are using react compiler, so it will be optimized automatically.
