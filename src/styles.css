@@ -63,7 +63,7 @@ code {
     --foreground: oklch(0.985 0 0);
     --card: oklch(0.141 0.005 285.823);
     --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.141 0.005 285.823);
+    --popover: oklch(0.341 0.005 285.823);
     --popover-foreground: oklch(0.985 0 0);
     --primary: oklch(0.985 0 0);
     --primary-foreground: oklch(0.21 0.006 285.885);

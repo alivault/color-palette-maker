@@ -18,13 +18,19 @@ import { CSS } from "@dnd-kit/utilities";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { GradientSlider } from "./GradientSlider";
 import {
   getHueGradient,
   getSatGradient,
   getLightGradient,
 } from "@/lib/color-utils";
-import { Trash2, GripVertical, Plus } from "lucide-react";
+import { Trash2, GripVertical, Plus, Info } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { v4 as uuidv4 } from "uuid";
 import type { ColorStop } from "@/lib/color-utils";
 import Color from "colorjs.io";
@@ -36,6 +42,8 @@ export type ControlsProps = {
   setColors: (colors: ColorStop[]) => void;
   selectedColorId: string | null;
   setSelectedColorId: (id: string | null) => void;
+  takeLongWay: boolean;
+  setTakeLongWay: (value: boolean) => void;
 };
 
 export function Controls({
@@ -45,6 +53,8 @@ export function Controls({
   setColors,
   selectedColorId,
   setSelectedColorId,
+  takeLongWay,
+  setTakeLongWay,
 }: ControlsProps) {
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -118,6 +128,26 @@ export function Controls({
           max={100}
           step={1}
         />
+        <div className="flex items-center justify-between pt-4">
+          <div className="flex items-center gap-2">
+            <Label htmlFor="long-way-switch">Rainbow mode</Label>
+            <Tooltip delayDuration={0}>
+              <TooltipTrigger>
+                <Info className="h-4 w-4 text-muted-foreground" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="max-w-[200px]">
+                  Force the gradient to take the long route around the color wheel, effectively creating a rainbow.
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <Switch
+            id="long-way-switch"
+            checked={takeLongWay}
+            onCheckedChange={setTakeLongWay}
+          />
+        </div>
       </div>
 
       <div className="shrink min-h-0 overflow-y-auto p-5">

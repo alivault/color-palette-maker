@@ -17,11 +17,12 @@ function App() {
   const numTilesMV = useMotionValue(numTiles)
 
   const [colors, setColors] = useState<ColorStop[]>([
-    { id: '1', h: 31, s: 1, l: 0.8 },
-    { id: '2', h: 243, s: 1, l: 0.4 },
+    { id: '1', h: 268, s: 1, l: 0.44 },
+    { id: '2', h: 0, s: 1, l: 0.67 },
   ])
 
   const [selectedColorId, setSelectedColorId] = useState<string | null>(null)
+  const [takeLongWay, setTakeLongWay] = useState(false)
 
   useEffect(() => {
     numTilesMV.set(numTiles)
@@ -49,6 +50,8 @@ function App() {
                     setColors={setColors}
                     selectedColorId={selectedColorId}
                     setSelectedColorId={setSelectedColorId}
+                    takeLongWay={takeLongWay}
+                    setTakeLongWay={setTakeLongWay}
                   />
                </div>
              </SheetContent>
@@ -61,6 +64,7 @@ function App() {
              <Palette 
                numTiles={numTiles}
                colors={colors}
+               takeLongWay={takeLongWay}
              />
            </div>
          </div>
@@ -77,6 +81,8 @@ function App() {
               setColors={setColors}
               selectedColorId={selectedColorId}
               setSelectedColorId={setSelectedColorId}
+              takeLongWay={takeLongWay}
+              setTakeLongWay={setTakeLongWay}
             />
           </div>
         </div>

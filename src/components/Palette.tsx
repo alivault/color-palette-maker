@@ -10,10 +10,11 @@ import {
 } from "@/components/ui/tooltip"
 import type { ColorStop } from '@/lib/color-utils'
 
-export const Palette = memo(({ numTiles, colors }: {
+export const Palette = memo(({ numTiles, colors, takeLongWay }: {
   numTiles: number,
   numTilesMV?: any, // kept for compatibility if needed, but unused
-  colors: ColorStop[]
+  colors: ColorStop[],
+  takeLongWay: boolean
 }) => {
   
   const hexColors = useMemo(() => {
@@ -66,12 +67,12 @@ export const Palette = memo(({ numTiles, colors }: {
       const c2 = colorObjects[segmentIndex + 1]
       
       // Interpolate in OKLCH
-      const mixed = c1.mix(c2, segmentT, { space: "oklch" })
+      const mixed = c1.mix(c2, segmentT, { space: "oklch", hue: takeLongWay ? "longer" : "shorter" })
       result.push(mixed.to("srgb").toString({ format: "hex" }))
     }
     
     return result
-  }, [colors, numTiles])
+  }, [colors, numTiles, takeLongWay])
 
   return (
     <>
