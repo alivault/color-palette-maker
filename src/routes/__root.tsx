@@ -29,6 +29,8 @@ export const Route = createRootRoute({
   shellComponent: RootDocument,
 })
 
+import { Toaster } from '../components/ui/sonner'
+
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -37,6 +39,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
+        <Toaster richColors />
         <TanStackDevtools
           config={{
             position: 'bottom-right',

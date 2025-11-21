@@ -1,6 +1,13 @@
 import { memo } from 'react'
 import Color from 'colorjs.io'
 import { motion, useTransform, MotionValue } from 'motion/react'
+import { toast } from 'sonner'
+import { Copy } from 'lucide-react'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 export const Palette = memo(({ numTiles, numTilesMV, startHue, endHue, startSat, endSat, startLight, endLight }: {
   numTiles: number,
@@ -42,23 +49,36 @@ export const PaletteTile = memo(({ index, allColors }: { index: number, allColor
     const contrastWhite = c.contrast(white, "WCAG21")
     const contrastBlack = c.contrast(black, "WCAG21")
     const text = contrastWhite > contrastBlack ? 'white' : 'black'
-    const val = Math.max(contrastWhite, contrastBlack).toFixed(1)
-    return { text, val, hex: cStr.substring(1) }
+    return { text, hex: cStr.substring(1) }
   })
 
   const textColor = useTransform(contrastData, d => d.text)
   // We can't easily render MotionValue content inside standard elements, 
   // but motion components support MotionValue as children.
-  const contrastVal = useTransform(contrastData, d => d.val)
   const hexVal = useTransform(contrastData, d => d.hex)
+
+  const handleCopy = () => {
+    const hex = hexVal.get()
+    const fullHex = `#${hex}`
+    navigator.clipboard.writeText(fullHex)
+    toast.success(`Copied ${fullHex} to clipboard`)
+  }
 
   return (
     <motion.div 
-      className="flex items-center justify-between px-4 py-2 rounded-lg shadow-sm hover:scale-[1.01] hover:shadow-md flex-1"
+      className="group cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-lg shadow-sm transition-transform hover:scale-[1.01] active:scale-[1] hover:shadow-md flex-1"
       style={{ backgroundColor: color, color: textColor }}
+      onClick={handleCopy}
     >
-      <motion.span className="font-bold opacity-90">{contrastVal}</motion.span>
       <motion.span className="uppercase opacity-80 font-mono text-sm">{hexVal}</motion.span>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Copy className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Copy to clipboard</p>
+        </TooltipContent>
+      </Tooltip>
     </motion.div>
   )
 })

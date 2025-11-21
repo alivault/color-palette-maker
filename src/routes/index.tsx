@@ -122,7 +122,7 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row h-screen w-full bg-background text-foreground overflow-hidden">
+    <div className="flex flex-col md:flex-row h-screen w-full bg-background text-foreground">
        <div className="flex-1 flex flex-col h-full min-h-0">
          <div className="p-6 md:p-10 flex flex-col gap-4 shrink-0">
            <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">Color Palette Maker</h1>

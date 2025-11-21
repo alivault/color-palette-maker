@@ -1,4 +1,5 @@
 import { createRouter } from '@tanstack/react-router'
+import { TooltipProvider } from '@/components/ui/tooltip'
 
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
@@ -9,6 +10,9 @@ export const getRouter = () => {
     routeTree,
     scrollRestoration: true,
     defaultPreloadStaleTime: 0,
+    Wrap: ({ children }) => (
+      <TooltipProvider>{children}</TooltipProvider>
+    ),
   })
 
   return router
