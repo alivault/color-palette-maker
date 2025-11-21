@@ -36,6 +36,13 @@ export const Route = createRootRoute({
         rel: 'stylesheet',
         href: appCss,
       },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '32x32',
+        href: '/favicon.png',
+      },
+      { rel: 'manifest', href: '/manifest.json' },
     ],
   }),
   component: RootComponent,
