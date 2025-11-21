@@ -52,6 +52,8 @@ code {
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.871 0.006 286.286);
+  --slider-border: rgba(0, 0, 0, 0.5);
+  --slider-bg: linear-gradient(to bottom, #777777 0%, #cacaca 100%);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -88,6 +90,8 @@ code {
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(0.274 0.006 286.033);
     --sidebar-ring: oklch(0.442 0.017 285.786);
+    --slider-border: rgba(255, 255, 255, 0.5);
+    --slider-bg: linear-gradient(to bottom, #333333 0%, #727272 100%);
   }
 }
 
@@ -136,5 +140,27 @@ code {
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Slider track styling - matching legacy app */
+  /* Dimensions and shadow apply to all sliders */
+  [data-slot="slider-track"] {
+    height: 8px !important;
+    border-radius: 16px !important;
+    box-shadow: inset 0 0 2px var(--slider-border) !important;
+    cursor: pointer;
+    /* Default background - gradient sliders will override with background-image */
+    background: var(--slider-bg);
+  }
+
+  /* Slider thumb styling - matching legacy app */
+  /* Dimensions and shadow apply to all sliders, but background is handled by component classes */
+  [data-slot="slider-thumb"] {
+    width: 16px !important;
+    height: 16px !important;
+    border-radius: 50% !important;
+    border: none !important;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 1), 0 0 2px 2px rgba(0, 0, 0, 0.8) !important;
+    cursor: pointer;
   }
 }
