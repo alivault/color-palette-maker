@@ -13,3 +13,9 @@ export const getLightGradient = (hue: number, sat: number) =>
     sat * 100
   }%, 100%))`
 
+export type ColorStop = {
+  id: string
+  h: number
+  s: number
+  l: number
+}

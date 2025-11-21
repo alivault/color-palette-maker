@@ -1,62 +1,112 @@
-import { Slider } from '@/components/ui/slider'
-import { Label } from '@/components/ui/label'
-import { GradientSlider } from './GradientSlider'
-import { getHueGradient, getSatGradient, getLightGradient } from '@/lib/color-utils'
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { Slider } from "@/components/ui/slider";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { GradientSlider } from "./GradientSlider";
+import {
+  getHueGradient,
+  getSatGradient,
+  getLightGradient,
+} from "@/lib/color-utils";
+import { Trash2, GripVertical, Plus } from "lucide-react";
+import { v4 as uuidv4 } from "uuid";
+import type { ColorStop } from "@/lib/color-utils";
+import Color from "colorjs.io";
 
 export type ControlsProps = {
-  numTiles: number
-  onNumTilesChange: (value: number) => void
-  startHue: number
-  endHue: number
-  hueShift: number
-  onStartHueChange: (value: number) => void
-  onEndHueChange: (value: number) => void
-  onHueShiftChange: (value: number[]) => void
-  startSat: number
-  endSat: number
-  satShift: number
-  onStartSatChange: (value: number) => void
-  onEndSatChange: (value: number) => void
-  onSatShiftChange: (value: number[]) => void
-  startLight: number
-  endLight: number
-  lightShift: number
-  onStartLightChange: (value: number) => void
-  onEndLightChange: (value: number) => void
-  onLightShiftChange: (value: number[]) => void
-}
+  numTiles: number;
+  onNumTilesChange: (value: number) => void;
+  colors: ColorStop[];
+  setColors: (colors: ColorStop[]) => void;
+  selectedColorId: string | null;
+  setSelectedColorId: (id: string | null) => void;
+};
 
 export function Controls({
   numTiles,
   onNumTilesChange,
-  startHue,
-  endHue,
-  hueShift,
-  onStartHueChange,
-  onEndHueChange,
-  onHueShiftChange,
-  startSat,
-  endSat,
-  satShift,
-  onStartSatChange,
-  onEndSatChange,
-  onSatShiftChange,
-  startLight,
-  endLight,
-  lightShift,
-  onStartLightChange,
-  onEndLightChange,
-  onLightShiftChange,
+  colors,
+  setColors,
+  selectedColorId,
+  setSelectedColorId,
 }: ControlsProps) {
-  const hueGradient = getHueGradient()
-  const startSatGradient = getSatGradient(startHue)
-  const endSatGradient = getSatGradient(endHue)
-  const startLightGradient = getLightGradient(startHue, startSat)
-  const endLightGradient = getLightGradient(endHue, endSat)
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      setColors(
+        arrayMove(
+          colors,
+          colors.findIndex((item) => item.id === active.id),
+          colors.findIndex((item) => item.id === over.id),
+        ),
+      );
+    }
+  };
+
+  const addColor = () => {
+    const lastColor = colors[colors.length - 1];
+    const newColor: ColorStop = {
+      id: uuidv4(),
+      h: lastColor.h,
+      s: lastColor.s,
+      l: lastColor.l,
+    };
+    setColors([...colors, newColor]);
+    setSelectedColorId(newColor.id);
+  };
+
+  const removeColor = (id: string) => {
+    if (colors.length <= 2) return;
+    const newColors = colors.filter((c) => c.id !== id);
+    setColors(newColors);
+    if (selectedColorId === id) {
+      setSelectedColorId(null);
+    }
+  };
+
+  const updateColor = (id: string, updates: Partial<ColorStop>) => {
+    setColors(colors.map((c) => (c.id === id ? { ...c, ...updates } : c)));
+  };
+
+  const selectedColor = colors.find((c) => c.id === selectedColorId);
+
+  const hueGradient = getHueGradient();
+  const satGradient = selectedColor ? getSatGradient(selectedColor.h) : "";
+  const lightGradient = selectedColor
+    ? getLightGradient(selectedColor.h, selectedColor.s)
+    : "";
 
   return (
-    <div className="flex flex-col gap-6 p-1">
-      <div className="space-y-4">
+    <div className="flex flex-col h-full">
+      <div className="space-y-4 flex-none p-5 border-b">
         <div className="flex justify-between items-center">
           <Label>Number of colors</Label>
           <span className="font-mono text-sm">{numTiles}</span>
@@ -70,140 +120,182 @@ export function Controls({
         />
       </div>
 
-      {/* Hue Controls */}
-      <div className="border-t border-border pt-4 space-y-4">
-        <h3 className="font-bold">Hue</h3>
-        <div className="space-y-2">
-          <div className="flex justify-between">
-            <Label>Hue Start</Label>
-            <span className="font-mono text-sm">{Math.round(startHue)}</span>
+      <div className="shrink min-h-0 overflow-y-auto p-5">
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h3 className="font-bold">Colors</h3>
           </div>
-          <GradientSlider
-            value={[startHue]}
-            onValueChange={(v) => onStartHueChange(v[0])}
-            min={0}
-            max={360}
-            step={1}
-            background={hueGradient}
-            thumbColor={`hsl(${startHue}, 100%, 50%)`}
-          />
-        </div>
-        <div className="space-y-2">
-          <div className="flex justify-between">
-            <Label>Hue End</Label>
-            <span className="font-mono text-sm">{Math.round(endHue)}</span>
-          </div>
-          <GradientSlider
-            value={[endHue]}
-            onValueChange={(v) => onEndHueChange(v[0])}
-            min={0}
-            max={360}
-            step={1}
-            background={hueGradient}
-            thumbColor={`hsl(${endHue}, 100%, 50%)`}
-          />
-        </div>
-        <div className="space-y-2">
-          <div className="flex justify-between">
-            <Label>Hue Shift</Label>
-            <span className="font-mono text-sm">
-              {hueShift - 180 > 0 ? `+${hueShift - 180}` : hueShift - 180}
-            </span>
-          </div>
-          <Slider value={[hueShift]} onValueChange={onHueShiftChange} min={0} max={360} step={1} />
+
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={colors.map((c) => c.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="space-y-2">
+                {colors.map((color) => (
+                  <SortableColorItem
+                    key={color.id}
+                    color={color}
+                    isSelected={color.id === selectedColorId}
+                    onClick={() =>
+                      setSelectedColorId(
+                        color.id === selectedColorId ? null : color.id,
+                      )
+                    }
+                    onDelete={() => removeColor(color.id)}
+                    canDelete={colors.length > 2}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
+
+          <Button onClick={addColor} className="w-full" variant="outline">
+            <Plus className="w-4 h-4 mr-2" /> Add Color
+          </Button>
         </div>
       </div>
 
-      {/* Saturation Controls */}
-      <div className="border-t border-border pt-4 space-y-4">
-        <h3 className="font-bold">Saturation</h3>
-        <div className="space-y-2">
-          <div className="flex justify-between">
-            <Label>Saturation Start</Label>
-            <span className="font-mono text-sm">{startSat.toFixed(2)}</span>
+      {selectedColor && (
+        <div className="flex-none border-t px-5 pt-5 pb-10 space-y-6 animate-in fade-in slide-in-from-top-2">
+          <div className="flex items-center justify-between">
+            <h3 className="font-bold text-sm">Edit Color</h3>
+            <div
+              className="w-6 h-6 rounded-full border border-border shadow-sm"
+              style={{
+                backgroundColor: `hsl(${selectedColor.h}, ${selectedColor.s * 100}%, ${selectedColor.l * 100}%)`,
+              }}
+            />
           </div>
-          <GradientSlider
-            value={[startSat]}
-            onValueChange={(v) => onStartSatChange(v[0])}
-            min={0}
-            max={1}
-            step={0.01}
-            background={startSatGradient}
-            thumbColor={`hsl(${startHue}, ${startSat * 100}%, 50%)`}
-          />
-        </div>
-        <div className="space-y-2">
-          <div className="flex justify-between">
-            <Label>Saturation End</Label>
-            <span className="font-mono text-sm">{endSat.toFixed(2)}</span>
-          </div>
-          <GradientSlider
-            value={[endSat]}
-            onValueChange={(v) => onEndSatChange(v[0])}
-            min={0}
-            max={1}
-            step={0.01}
-            background={endSatGradient}
-            thumbColor={`hsl(${endHue}, ${endSat * 100}%, 50%)`}
-          />
-        </div>
-        <div className="space-y-2">
-          <div className="flex justify-between">
-            <Label>Saturation Shift</Label>
-            <span className="font-mono text-sm">{satShift.toFixed(2)}</span>
-          </div>
-          <Slider value={[satShift]} onValueChange={onSatShiftChange} min={0} max={1} step={0.01} />
-        </div>
-      </div>
 
-      {/* Lightness Controls */}
-      <div className="border-t border-border pt-4 space-y-4">
-        <h3 className="font-bold">Lightness</h3>
-        <div className="space-y-2">
-          <div className="flex justify-between">
-            <Label>Lightness Start</Label>
-            <span className="font-mono text-sm">{startLight.toFixed(2)}</span>
+          {/* Hue */}
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <Label className="text-xs">Hue</Label>
+              <span className="font-mono text-xs">
+                {Math.round(selectedColor.h)}
+              </span>
+            </div>
+            <GradientSlider
+              value={[selectedColor.h]}
+              onValueChange={(v) => updateColor(selectedColor.id, { h: v[0] })}
+              min={0}
+              max={360}
+              step={1}
+              background={hueGradient}
+              thumbColor={`hsl(${selectedColor.h}, 100%, 50%)`}
+            />
           </div>
-          <GradientSlider
-            value={[startLight]}
-            onValueChange={(v) => onStartLightChange(v[0])}
-            min={0}
-            max={1}
-            step={0.01}
-            background={startLightGradient}
-            thumbColor={`hsl(${startHue}, ${startSat * 100}%, ${startLight * 100}%)`}
-          />
-        </div>
-        <div className="space-y-2">
-          <div className="flex justify-between">
-            <Label>Lightness End</Label>
-            <span className="font-mono text-sm">{endLight.toFixed(2)}</span>
+
+          {/* Saturation */}
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <Label className="text-xs">Saturation</Label>
+              <span className="font-mono text-xs">
+                {selectedColor.s.toFixed(2)}
+              </span>
+            </div>
+            <GradientSlider
+              value={[selectedColor.s]}
+              onValueChange={(v) => updateColor(selectedColor.id, { s: v[0] })}
+              min={0}
+              max={1}
+              step={0.01}
+              background={satGradient}
+              thumbColor={`hsl(${selectedColor.h}, ${selectedColor.s * 100}%, 50%)`}
+            />
           </div>
-          <GradientSlider
-            value={[endLight]}
-            onValueChange={(v) => onEndLightChange(v[0])}
-            min={0}
-            max={1}
-            step={0.01}
-            background={endLightGradient}
-            thumbColor={`hsl(${endHue}, ${endSat * 100}%, ${endLight * 100}%)`}
-          />
-        </div>
-        <div className="space-y-2">
-          <div className="flex justify-between">
-            <Label>Lightness Shift</Label>
-            <span className="font-mono text-sm">{lightShift.toFixed(2)}</span>
+
+          {/* Lightness */}
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <Label className="text-xs">Lightness</Label>
+              <span className="font-mono text-xs">
+                {selectedColor.l.toFixed(2)}
+              </span>
+            </div>
+            <GradientSlider
+              value={[selectedColor.l]}
+              onValueChange={(v) => updateColor(selectedColor.id, { l: v[0] })}
+              min={0}
+              max={1}
+              step={0.01}
+              background={lightGradient}
+              thumbColor={`hsl(${selectedColor.h}, ${selectedColor.s * 100}%, ${selectedColor.l * 100}%)`}
+            />
           </div>
-          <Slider
-            value={[lightShift]}
-            onValueChange={onLightShiftChange}
-            min={0}
-            max={1}
-            step={0.01}
-          />
         </div>
-      </div>
+      )}
     </div>
-  )
+  );
 }
 
+function SortableColorItem({
+  color,
+  isSelected,
+  onClick,
+  onDelete,
+  canDelete,
+}: {
+  color: ColorStop;
+  isSelected: boolean;
+  onClick: () => void;
+  onDelete: () => void;
+  canDelete: boolean;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: color.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  const hslString = `hsl(${color.h}, ${color.s * 100}%, ${color.l * 100}%)`;
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="flex items-center gap-2 touch-none"
+    >
+      <div
+        className={`flex-1 flex items-center gap-3 p-2 rounded-md border ${isSelected ? "border-primary ring-1 ring-primary" : "border-border"} bg-card hover:bg-accent/50 cursor-pointer transition-colors`}
+        onClick={onClick}
+      >
+        <div
+          {...attributes}
+          {...listeners}
+          className="cursor-grab active:cursor-grabbing p-1 hover:bg-background rounded text-muted-foreground"
+        >
+          <GripVertical className="w-4 h-4" />
+        </div>
+
+        <div
+          className="size-8 rounded border border-border shadow-sm"
+          style={{ backgroundColor: hslString }}
+        />
+
+        <p className="flex text-xs text-muted-foreground font-mono">
+          {new Color("hsl", [color.h, color.s * 100, color.l * 100]).to("srgb").toString({ format: "hex" })}
+        </p>
+      </div>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete();
+        }}
+        className="h-8 w-8 text-muted-foreground hover:text-destructive"
+        disabled={!canDelete}
+      >
+        <Trash2 className="w-4 h-4" />
+      </Button>
+    </div>
+  );
+}
