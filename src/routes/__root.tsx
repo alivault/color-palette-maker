@@ -21,21 +21,21 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'Color Palette Maker',
+        title: 'Chromagine',
       },
       {
         name: 'description',
         content:
-          'A unique and intuitive tool for crafting harmonious color palettes. Supports multiple color spaces like OKLCH, sRGB, HSL, and more.',
+          'Chromagine is a unique and intuitive tool for crafting harmonious color palettes. It supports multiple color spaces like OKLCH, sRGB, HSL, and more.',
       },
       {
         property: 'og:title',
-        content: 'Color Palette Maker',
+        content: 'Chromagine',
       },
       {
         property: 'og:description',
         content:
-          'A unique and intuitive tool for crafting harmonious color palettes. Supports multiple color spaces like OKLCH, sRGB, HSL, and more.',
+          'Chromagine is a unique and intuitive tool for crafting harmonious color palettes. It supports multiple color spaces like OKLCH, sRGB, HSL, and more.',
       },
     ],
     links: [

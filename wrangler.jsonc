@@ -1,12 +1,12 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "color-palette-maker",
+  "name": "gamut",
   "compatibility_date": "2025-09-02",
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry",
   "routes": [
     {
-      "pattern": "color.aliabbas.dev",
+      "pattern": "chromagine.aliabbas.dev",
       "custom_domain": true
     }
   ]

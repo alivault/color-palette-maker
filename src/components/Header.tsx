@@ -16,7 +16,7 @@ export function Header({ className, action, ...props }: HeaderProps) {
     >
       <div className="flex flex-col">
         <a href="/" className="text-xl font-extrabold tracking-tight">
-          Color Palette Maker
+          Chromagine
         </a>
         <p className="text-muted-foreground text-xs">
           by{' '}
