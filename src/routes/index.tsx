@@ -1,16 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-  SheetTrigger,
-} from '@/components/ui/sheet'
-import { Button } from '@/components/ui/button'
-import { Settings2 } from 'lucide-react'
 import { Header } from '@/components/Header'
 import { Controls } from '@/components/Controls'
+import { MobileControlsTrigger } from '@/components/MobileControlsTrigger'
 import { Palette } from '@/components/Palette'
 import { ExportDialog } from '@/components/ExportDialog'
 import { usePalette } from '@/hooks/usePalette'
@@ -57,41 +48,17 @@ function App() {
 
       <div className="flex min-h-0 flex-1 flex-col md:flex-row">
         <div className="flex h-full min-h-0 flex-1 flex-col">
-          {/* Mobile Trigger */}
-          <div className="fixed right-4 bottom-4 z-50 md:hidden">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  size="icon"
-                  className="h-12 w-12 rounded-full shadow-lg"
-                >
-                  <Settings2 className="h-6 w-6" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent
-                side="right"
-                className="flex h-full w-[300px] flex-col sm:w-[340px]"
-              >
-                <SheetHeader className="flex-none">
-                  <SheetTitle>Controls</SheetTitle>
-                  <SheetDescription>Adjust settings.</SheetDescription>
-                </SheetHeader>
-                <div className="mt-6 min-h-0 flex-1 pb-8">
-                  <Controls
-                    numTiles={numTiles}
-                    onNumTilesChange={setNumTiles}
-                    colors={colors}
-                    setColors={setColors}
-                    onColorsChange={setLocalColors}
-                    selectedColorId={selectedColorId}
-                    setSelectedColorId={setSelectedColorId}
-                    takeLongWay={takeLongWay}
-                    setTakeLongWay={setTakeLongWay}
-                  />
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
+          <MobileControlsTrigger
+            numTiles={numTiles}
+            onNumTilesChange={setNumTiles}
+            colors={colors}
+            setColors={setColors}
+            onColorsChange={setLocalColors}
+            selectedColorId={selectedColorId}
+            setSelectedColorId={setSelectedColorId}
+            takeLongWay={takeLongWay}
+            setTakeLongWay={setTakeLongWay}
+          />
 
           {/* Palette Grid */}
           <div className="flex-1 overflow-y-auto p-5">
