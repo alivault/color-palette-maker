@@ -13,11 +13,11 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
-import { Slider } from '@/components/ui/slider'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { Input } from '@/components/ui/input'
+import { NumberInput } from '@/components/ui/number-input'
 import {
   Select,
   SelectContent,
@@ -243,16 +243,18 @@ export function Controls({
         <div className="space-y-5 border-b p-5">
           <div className="flex items-center justify-between">
             <Label>Number of colors</Label>
-            <span className="font-mono text-sm">{numTiles}</span>
+            <div className="w-24">
+              <NumberInput
+                value={numTiles}
+                onValueChange={(v) =>
+                  v !== undefined && onNumTilesChange(v, true)
+                }
+                min={2}
+                max={100}
+                stepper={1}
+              />
+            </div>
           </div>
-          <Slider
-            value={[numTiles]}
-            onValueChange={(v) => onNumTilesChange(v[0], false)}
-            onValueCommit={(v) => onNumTilesChange(v[0], true)}
-            min={2}
-            max={100}
-            step={1}
-          />
           {setColorSpace && (
             <div className="flex items-center justify-between">
               <Label>Color Space</Label>
