@@ -63,24 +63,18 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       onValueChange?.(next)
     }, [stepper, min, value, onValueChange])
 
-    useEffect(() => {
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (
-          document.activeElement ===
-          (ref as React.RefObject<HTMLInputElement>).current
-        ) {
-          if (e.key === 'ArrowUp') {
-            handleIncrement()
-          } else if (e.key === 'ArrowDown') {
-            handleDecrement()
-          }
+    const handleKeyDown = useCallback(
+      (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'ArrowUp') {
+          e.preventDefault()
+          handleIncrement()
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault()
+          handleDecrement()
         }
-      }
-      window.addEventListener('keydown', handleKeyDown)
-      return () => {
-        window.removeEventListener('keydown', handleKeyDown)
-      }
-    }, [handleIncrement, handleDecrement, ref])
+      },
+      [handleIncrement, handleDecrement],
+    )
 
     useEffect(() => {
       if (controlledValue !== undefined) {
@@ -127,6 +121,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
           allowNegative={min < 0}
           valueIsNumericString
           onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
           max={max}
           min={min}
           suffix={suffix}

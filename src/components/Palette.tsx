@@ -95,19 +95,20 @@ const PaletteTile = memo(
       <motion.div
         layout
         ref={ref}
-        initial={{ opacity: 0, scale: 0.8 }}
+        initial={{ opacity: 0, scale: 0.8, y: 20 }}
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
         animate={{
           opacity: 1,
           scale: 1,
+          y: 0,
           backgroundColor: colorHex,
           color: textColor,
           transition: disableAnimation
             ? { duration: 0 }
             : { delay, type: 'spring', bounce: 0.2 },
         }}
-        exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.2 } }}
+        exit={{ opacity: 0, scale: 0.8, y: 20, transition: { duration: 0.2 } }}
         className="group flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2 shadow-sm hover:shadow-md"
         onClick={handleCopy}
       >
