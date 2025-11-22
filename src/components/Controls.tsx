@@ -252,17 +252,15 @@ export function Controls({
         <div className="space-y-5 border-b p-5">
           <div className="flex items-center justify-between">
             <Label>Number of colors</Label>
-            <div className="w-24">
-              <NumberInput
-                value={numTiles}
-                onValueChange={(v) =>
-                  v !== undefined && onNumTilesChange(v, true)
-                }
-                min={2}
-                max={100}
-                stepper={1}
-              />
-            </div>
+            <NumberInput
+              value={numTiles}
+              onValueChange={(v) =>
+                v !== undefined && onNumTilesChange(v, true)
+              }
+              min={2}
+              max={100}
+              stepper={1}
+            />
           </div>
           {setColorSpace && (
             <div className="flex items-center justify-between">

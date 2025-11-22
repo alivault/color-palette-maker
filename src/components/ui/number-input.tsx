@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { ChevronDown, ChevronUp, Minus, Plus } from 'lucide-react'
 import { forwardRef, useCallback, useEffect, useState } from 'react'
 import { NumericFormat, NumericFormatProps } from 'react-number-format'
 import { Button } from '@/components/ui/button'
@@ -112,6 +112,16 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
 
     return (
       <div className="flex items-center">
+        {/* Mobile: - button on left */}
+        <Button
+          aria-label="Decrease value"
+          className="border-input h-8 rounded-l-md rounded-r-none border-r-0 md:hidden"
+          variant="outline"
+          onClick={handleDecrement}
+          disabled={value === min}
+        >
+          <Minus className="size-4" />
+        </Button>
         <NumericFormat
           value={value}
           onValueChange={handleChange}
@@ -128,11 +138,22 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
           prefix={prefix}
           customInput={Input}
           placeholder={placeholder}
-          className="relative h-8 [appearance:textfield] rounded-r-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          className="relative h-8 w-13 shrink-0 [appearance:textfield] rounded-none md:rounded-l-md md:rounded-r-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
           getInputRef={ref}
           {...props}
         />
-        <div className="flex flex-col">
+        {/* Mobile: + button on right */}
+        <Button
+          aria-label="Increase value"
+          className="border-input h-8 rounded-l-none rounded-r-md border-l-0 md:hidden"
+          variant="outline"
+          onClick={handleIncrement}
+          disabled={value === max}
+        >
+          <Plus className="size-4" />
+        </Button>
+        {/* Desktop: chevron buttons on right */}
+        <div className="hidden flex-col md:flex">
           <Button
             aria-label="Increase value"
             className="border-input h-4 rounded-l-none rounded-br-none border-b-[0.5px] border-l-0 py-0 focus-visible:relative has-[>svg]:px-3"
