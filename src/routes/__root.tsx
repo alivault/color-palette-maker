@@ -37,6 +37,10 @@ export const Route = createRootRoute({
         content:
           'Chromagine is a unique and intuitive tool for crafting harmonious color palettes. It supports multiple color spaces like OKLCH, sRGB, HSL, and more.',
       },
+      {
+        property: 'og:image',
+        content: '/opengraph-image.png',
+      },
     ],
     links: [
       {
