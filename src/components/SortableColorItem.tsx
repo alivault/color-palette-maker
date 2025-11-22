@@ -47,11 +47,11 @@ export function SortableColorItem({
           {...listeners}
           className="hover:bg-background text-muted-foreground cursor-grab rounded p-1 active:cursor-grabbing"
         >
-          <GripVertical className="h-4 w-4" />
+          <GripVertical className="size-4" />
         </div>
 
         <div
-          className="border-border size-8 rounded border shadow-sm"
+          className="border-border size-6 rounded border shadow-sm"
           style={{ backgroundColor: hslString }}
         />
 

@@ -26,14 +26,17 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { GradientSlider } from './GradientSlider'
-import { useState, useEffect, useId } from 'react'
+import { useState, useEffect, useId, useRef } from 'react'
 import {
   getHueGradient,
   getSatGradient,
   getLightGradient,
   POLAR_COLOR_SPACES,
+  wrapHue,
+  clamp,
 } from '@/lib/color-utils'
 import { Plus, Info } from 'lucide-react'
+import { ShiftAll } from './ShiftAll'
 import {
   Tooltip,
   TooltipContent,
@@ -188,76 +191,132 @@ export function Controls({
 
   const id = useId()
 
+  const [globalHue, setGlobalHue] = useState(0)
+  const [globalSat, setGlobalSat] = useState(0)
+  const [globalLight, setGlobalLight] = useState(0)
+
+  const dragStartColors = useRef<ColorStop[] | null>(null)
+
+  const handleGlobalUpdate = (
+    type: 'h' | 's' | 'l',
+    value: number,
+    commit: boolean,
+  ) => {
+    if (!dragStartColors.current) {
+      dragStartColors.current = colors
+    }
+
+    // Update the slider UI state
+    if (type === 'h') setGlobalHue(value)
+    if (type === 's') setGlobalSat(value)
+    if (type === 'l') setGlobalLight(value)
+
+    const newColors = dragStartColors.current.map((c) => {
+      const newColor = { ...c }
+      if (type === 'h') {
+        newColor.h = wrapHue(c.h + value)
+      } else if (type === 's') {
+        newColor.s = clamp(c.s + value, 0, 1)
+      } else if (type === 'l') {
+        newColor.l = clamp(c.l + value, 0, 1)
+      }
+      return newColor
+    })
+
+    if (commit) {
+      setColors(newColors)
+      // Reset UI state
+      setGlobalHue(0)
+      setGlobalSat(0)
+      setGlobalLight(0)
+      dragStartColors.current = null
+    } else if (onColorsChange) {
+      onColorsChange(newColors)
+    } else {
+      setColors(newColors)
+    }
+  }
+
   return (
     <div className="flex h-full flex-col">
-      <div className="flex-none space-y-4 border-b p-5">
-        <div className="flex items-center justify-between">
-          <Label>Number of colors</Label>
-          <span className="font-mono text-sm">{numTiles}</span>
-        </div>
-        <Slider
-          value={[numTiles]}
-          onValueChange={(v) => onNumTilesChange(v[0], false)}
-          onValueCommit={(v) => onNumTilesChange(v[0], true)}
-          min={2}
-          max={100}
-          step={1}
-        />
-        {setColorSpace && (
-          <div className="flex items-center justify-between pt-4">
-            <Label>Color Space</Label>
-            <Select
-              value={colorSpace}
-              onValueChange={(v) => setColorSpace(v as ColorSpace)}
-            >
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Select space" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="srgb">sRGB</SelectItem>
-                <SelectItem value="hsl">HSL</SelectItem>
-                <SelectItem value="lch">LCH</SelectItem>
-                <SelectItem value="oklch">OKLCH</SelectItem>
-                <SelectItem value="lab">LAB</SelectItem>
-                <SelectItem value="oklab">OKLAB</SelectItem>
-              </SelectContent>
-            </Select>
+      <div className="flex-none">
+        <div className="space-y-5 border-b p-5">
+          <div className="flex items-center justify-between">
+            <Label>Number of colors</Label>
+            <span className="font-mono text-sm">{numTiles}</span>
           </div>
-        )}
-        <div className="flex items-center justify-between pt-4">
-          <div className="flex items-center gap-2">
-            <Label
-              htmlFor="long-way-switch"
-              className={!isPolar ? 'text-muted-foreground' : 'cursor-pointer'}
-            >
-              Rainbow mode
-            </Label>
-            <Tooltip delayDuration={0}>
-              <TooltipTrigger asChild>
-                <Info
-                  className={`h-4 w-4 ${!isPolar ? 'text-muted-foreground/50' : 'text-muted-foreground'}`}
-                />
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="max-w-[200px]">
-                  {isPolar
-                    ? 'Force the gradient to take the long route around the color wheel, effectively creating a rainbow.'
-                    : 'Rainbow mode is only available for polar color spaces (HSL, LCH, OKLCH).'}
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
-          <Switch
-            id="long-way-switch"
-            checked={takeLongWay}
-            onCheckedChange={setTakeLongWay}
-            disabled={!isPolar}
+          <Slider
+            value={[numTiles]}
+            onValueChange={(v) => onNumTilesChange(v[0], false)}
+            onValueCommit={(v) => onNumTilesChange(v[0], true)}
+            min={2}
+            max={100}
+            step={1}
           />
+          {setColorSpace && (
+            <div className="flex items-center justify-between">
+              <Label>Color Space</Label>
+              <Select
+                value={colorSpace}
+                onValueChange={(v) => setColorSpace(v as ColorSpace)}
+              >
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue placeholder="Select space" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="srgb">sRGB</SelectItem>
+                  <SelectItem value="hsl">HSL</SelectItem>
+                  <SelectItem value="lch">LCH</SelectItem>
+                  <SelectItem value="oklch">OKLCH</SelectItem>
+                  <SelectItem value="lab">LAB</SelectItem>
+                  <SelectItem value="oklab">OKLAB</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Label
+                htmlFor="long-way-switch"
+                className={
+                  !isPolar ? 'text-muted-foreground' : 'cursor-pointer'
+                }
+              >
+                Rainbow Mode
+              </Label>
+              <Tooltip delayDuration={300}>
+                <TooltipTrigger asChild>
+                  <Info
+                    className={`h-4 w-4 ${!isPolar ? 'text-muted-foreground/50' : 'text-muted-foreground'}`}
+                  />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="max-w-[200px]">
+                    {isPolar
+                      ? 'Force the gradient to take the long route around the color wheel, effectively creating a rainbow.'
+                      : 'Rainbow mode is only available for polar color spaces (HSL, LCH, OKLCH).'}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+            <Switch
+              id="long-way-switch"
+              checked={takeLongWay}
+              onCheckedChange={setTakeLongWay}
+              disabled={!isPolar}
+            />
+          </div>
         </div>
+        <ShiftAll
+          globalHue={globalHue}
+          globalSat={globalSat}
+          globalLight={globalLight}
+          onGlobalUpdate={handleGlobalUpdate}
+        />
       </div>
 
       <div className="min-h-0 shrink overflow-y-auto p-5">
-        <div className="space-y-4">
+        <div className="space-y-5">
           <div className="flex items-center justify-between">
             <h3 className="font-bold">Colors</h3>
           </div>
@@ -298,7 +357,7 @@ export function Controls({
       </div>
 
       {selectedColor && (
-        <div className="animate-in fade-in slide-in-from-top-2 flex-none space-y-6 border-t px-5 pt-5 pb-10">
+        <div className="animate-in fade-in slide-in-from-top-2 flex-none space-y-5 border-t px-5 pt-5 pb-10">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold">Edit Color</h3>
             <div
@@ -306,24 +365,6 @@ export function Controls({
               style={{
                 backgroundColor: `hsl(${selectedColor.h}, ${selectedColor.s * 100}%, ${selectedColor.l * 100}%)`,
               }}
-            />
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Label className="text-xs" htmlFor="hex-input">
-              Hex
-            </Label>
-            <Input
-              id="hex-input"
-              value={hexInput}
-              onChange={(e) => handleHexChange(e.target.value)}
-              onBlur={handleHexBlur}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleHexBlur()
-                }
-              }}
-              className="font-mono"
             />
           </div>
 
@@ -396,6 +437,23 @@ export function Controls({
               step={0.01}
               background={lightGradient}
               thumbColor={`hsl(${selectedColor.h}, ${selectedColor.s * 100}%, ${selectedColor.l * 100}%)`}
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <Label className="text-xs" htmlFor="hex-input">
+              Hex
+            </Label>
+            <Input
+              id="hex-input"
+              value={hexInput}
+              onChange={(e) => handleHexChange(e.target.value)}
+              onBlur={handleHexBlur}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleHexBlur()
+                }
+              }}
+              className="w-[90px] font-mono"
             />
           </div>
         </div>
