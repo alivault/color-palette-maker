@@ -28,10 +28,24 @@ export type ColorSpace = 'srgb' | 'hsl' | 'lch' | 'oklch' | 'lab' | 'oklab'
 
 export const POLAR_COLOR_SPACES: ColorSpace[] = ['hsl', 'lch', 'oklch']
 
-export const hexToColorStop = (hex: string): ColorStop => {
+export const hexToColorStop = (hex: string | number): ColorStop => {
   try {
+    // Handle numbers that might come from URL parsing (e.g. 000000 -> 0)
+    let hexStr = String(hex)
+
+    // If it's a single digit 0, treat it as black
+    if (hexStr === '0') hexStr = '000000'
+
+    // Pad with zeros if needed (e.g. "f" -> "00000f", "ff" -> "0000ff")
+    // But only if it looks like a hex number without hash
+    if (!hexStr.startsWith('#')) {
+      if (hexStr.length < 6 && hexStr.length !== 3) {
+        hexStr = hexStr.padStart(6, '0')
+      }
+    }
+
     // Add hash if missing
-    const hexWithHash = hex.startsWith('#') ? hex : `#${hex}`
+    const hexWithHash = hexStr.startsWith('#') ? hexStr : `#${hexStr}`
     const c = new Color(hexWithHash)
     const hsl = c.to('hsl')
     return {

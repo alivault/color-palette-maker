@@ -40,9 +40,11 @@ export function usePalette({ searchParams, navigate }: UsePaletteProps) {
     const currentUrlHex = colorsToUrlHex(colors)
     const targetHex = searchParams.colors ?? defaultColorsUrl
 
+    const targetNormalized = colorsToUrlHex(targetHex.map(hexToColorStop))
+
     const isSame =
-      targetHex.length === currentUrlHex.length &&
-      targetHex.every((hex, i) => hex === currentUrlHex[i])
+      targetNormalized.length === currentUrlHex.length &&
+      targetNormalized.every((hex, i) => hex === currentUrlHex[i])
 
     if (!isSame) {
       setColors(targetHex.map(hexToColorStop))
