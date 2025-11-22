@@ -19,7 +19,9 @@ import { Slider } from '@/components/ui/slider'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
+import { Input } from '@/components/ui/input'
 import { GradientSlider } from './GradientSlider'
+import { useState, useEffect } from 'react'
 import {
   getHueGradient,
   getSatGradient,
@@ -37,9 +39,10 @@ import Color from 'colorjs.io'
 
 export type ControlsProps = {
   numTiles: number
-  onNumTilesChange: (value: number) => void
+  onNumTilesChange: (value: number, commit?: boolean) => void
   colors: ColorStop[]
   setColors: (colors: ColorStop[]) => void
+  onColorsChange?: (colors: ColorStop[]) => void
   selectedColorId: string | null
   setSelectedColorId: (id: string | null) => void
   takeLongWay: boolean
@@ -51,6 +54,7 @@ export function Controls({
   onNumTilesChange,
   colors,
   setColors,
+  onColorsChange,
   selectedColorId,
   setSelectedColorId,
   takeLongWay,
@@ -102,11 +106,66 @@ export function Controls({
     }
   }
 
-  const updateColor = (id: string, updates: Partial<ColorStop>) => {
-    setColors(colors.map((c) => (c.id === id ? { ...c, ...updates } : c)))
+  const updateColor = (
+    id: string,
+    updates: Partial<ColorStop>,
+    commit: boolean = true,
+  ) => {
+    const newColors = colors.map((c) =>
+      c.id === id ? { ...c, ...updates } : c,
+    )
+    if (commit) {
+      setColors(newColors)
+    } else if (onColorsChange) {
+      onColorsChange(newColors)
+    } else {
+      setColors(newColors)
+    }
   }
 
   const selectedColor = colors.find((c) => c.id === selectedColorId)
+
+  const [hexInput, setHexInput] = useState('')
+
+  useEffect(() => {
+    if (selectedColor) {
+      const hex = new Color('hsl', [
+        selectedColor.h,
+        selectedColor.s * 100,
+        selectedColor.l * 100,
+      ])
+        .to('srgb')
+        .toString({ format: 'hex' })
+      setHexInput(hex)
+    }
+  }, [selectedColor])
+
+  const handleHexChange = (val: string) => {
+    setHexInput(val)
+  }
+
+  const handleHexBlur = () => {
+    if (!selectedColor) return
+
+    try {
+      const color = new Color(hexInput)
+      const hsl = color.to('hsl')
+      updateColor(selectedColor.id, {
+        h: isNaN(hsl.coords[0]) ? 0 : hsl.coords[0],
+        s: hsl.coords[1] / 100,
+        l: hsl.coords[2] / 100,
+      })
+    } catch (error) {
+      const hex = new Color('hsl', [
+        selectedColor.h,
+        selectedColor.s * 100,
+        selectedColor.l * 100,
+      ])
+        .to('srgb')
+        .toString({ format: 'hex' })
+      setHexInput(hex)
+    }
+  }
 
   const hueGradient = getHueGradient()
   const satGradient = selectedColor ? getSatGradient(selectedColor.h) : ''
@@ -123,7 +182,8 @@ export function Controls({
         </div>
         <Slider
           value={[numTiles]}
-          onValueChange={(v) => onNumTilesChange(v[0])}
+          onValueChange={(v) => onNumTilesChange(v[0], false)}
+          onValueCommit={(v) => onNumTilesChange(v[0], true)}
           min={2}
           max={100}
           step={1}
@@ -205,6 +265,24 @@ export function Controls({
             />
           </div>
 
+          <div className="flex items-center gap-2">
+            <Label className="text-xs" htmlFor="hex-input">
+              Hex
+            </Label>
+            <Input
+              id="hex-input"
+              value={hexInput}
+              onChange={(e) => handleHexChange(e.target.value)}
+              onBlur={handleHexBlur}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleHexBlur()
+                }
+              }}
+              className="font-mono"
+            />
+          </div>
+
           {/* Hue */}
           <div className="space-y-2">
             <div className="flex justify-between">
@@ -215,7 +293,12 @@ export function Controls({
             </div>
             <GradientSlider
               value={[selectedColor.h]}
-              onValueChange={(v) => updateColor(selectedColor.id, { h: v[0] })}
+              onValueChange={(v) =>
+                updateColor(selectedColor.id, { h: v[0] }, false)
+              }
+              onValueCommit={(v) =>
+                updateColor(selectedColor.id, { h: v[0] }, true)
+              }
               min={0}
               max={360}
               step={1}
@@ -234,7 +317,12 @@ export function Controls({
             </div>
             <GradientSlider
               value={[selectedColor.s]}
-              onValueChange={(v) => updateColor(selectedColor.id, { s: v[0] })}
+              onValueChange={(v) =>
+                updateColor(selectedColor.id, { s: v[0] }, false)
+              }
+              onValueCommit={(v) =>
+                updateColor(selectedColor.id, { s: v[0] }, true)
+              }
               min={0}
               max={1}
               step={0.01}
@@ -253,7 +341,12 @@ export function Controls({
             </div>
             <GradientSlider
               value={[selectedColor.l]}
-              onValueChange={(v) => updateColor(selectedColor.id, { l: v[0] })}
+              onValueChange={(v) =>
+                updateColor(selectedColor.id, { l: v[0] }, false)
+              }
+              onValueCommit={(v) =>
+                updateColor(selectedColor.id, { l: v[0] }, true)
+              }
               min={0}
               max={1}
               step={0.01}

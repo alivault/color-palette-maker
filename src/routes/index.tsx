@@ -120,7 +120,10 @@ function App() {
     toast.success('Copied palette to clipboard')
   }
 
-  const handleSetNumTiles = (val: number | ((curr: number) => number)) => {
+  const handleSetNumTiles = (
+    val: number | ((curr: number) => number),
+    commit: boolean = true,
+  ) => {
     const newValue = typeof val === 'function' ? val(numTiles) : val
 
     navigate({
@@ -131,7 +134,7 @@ function App() {
         }
         return next
       },
-      replace: true, // Don't push to history for slider changes
+      replace: !commit, // Only push to history on commit (mouse up)
     })
   }
 
@@ -224,6 +227,7 @@ function App() {
                     onNumTilesChange={handleSetNumTiles}
                     colors={colors}
                     setColors={handleSetColors}
+                    onColorsChange={setColors}
                     selectedColorId={selectedColorId}
                     setSelectedColorId={setSelectedColorId}
                     takeLongWay={takeLongWay}
@@ -255,6 +259,7 @@ function App() {
                 onNumTilesChange={handleSetNumTiles}
                 colors={colors}
                 setColors={handleSetColors}
+                onColorsChange={setColors}
                 selectedColorId={selectedColorId}
                 setSelectedColorId={setSelectedColorId}
                 takeLongWay={takeLongWay}
