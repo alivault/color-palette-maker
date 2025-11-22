@@ -28,10 +28,14 @@ const workerIndexChunkPlugin = () => ({
   },
 });
 
-const config = defineConfig({
+const config = defineConfig(({ command }) => ({
   plugins: [
-    cloudflare({ viteEnvironment: { name: "ssr" } }),
-    devtools(),
+    ...(command === "build" ? [cloudflare({ viteEnvironment: { name: "ssr" } })] : []),
+    devtools({
+      eventBusConfig: {
+        enabled: false,
+      },
+    }),
     nitro(),
     // this is the plugin that enables path aliases
     viteTsConfigPaths({
@@ -46,6 +50,6 @@ const config = defineConfig({
     }),
     workerIndexChunkPlugin(),
   ],
-});
+}));
 
 export default config;

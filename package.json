@@ -27,7 +27,6 @@
     "@tanstack/react-router-ssr-query": "^1.131.7",
     "@tanstack/react-start": "^1.132.0",
     "@tanstack/router-plugin": "^1.132.0",
-    "@types/uuid": "^11.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "colorjs.io": "^0.5.2",
@@ -62,4 +61,3 @@
     "wrangler": "^4.50.0"
   }
 }
-
