@@ -8,22 +8,28 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { type ColorStop, generatePalette } from '@/lib/color-utils'
+import {
+  type ColorStop,
+  type ColorSpace,
+  generatePalette,
+} from '@/lib/color-utils'
 
 export const Palette = memo(
   ({
     numTiles,
     colors,
     takeLongWay,
+    colorSpace,
   }: {
     numTiles: number
     numTilesMV?: any // kept for compatibility if needed, but unused
     colors: ColorStop[]
     takeLongWay: boolean
+    colorSpace: ColorSpace
   }) => {
     const hexColors = useMemo(() => {
-      return generatePalette(colors, numTiles, takeLongWay)
-    }, [colors, numTiles, takeLongWay])
+      return generatePalette(colors, numTiles, takeLongWay, colorSpace)
+    }, [colors, numTiles, takeLongWay, colorSpace])
 
     return (
       <>

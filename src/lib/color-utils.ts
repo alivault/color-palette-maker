@@ -24,6 +24,10 @@ export type ColorStop = {
   l: number
 }
 
+export type ColorSpace = 'srgb' | 'hsl' | 'lch' | 'oklch' | 'lab' | 'oklab'
+
+export const POLAR_COLOR_SPACES: ColorSpace[] = ['hsl', 'lch', 'oklch']
+
 export const hexToColorStop = (hex: string): ColorStop => {
   try {
     // Add hash if missing
@@ -66,6 +70,7 @@ export function generatePalette(
   colors: ColorStop[],
   numTiles: number,
   takeLongWay: boolean,
+  colorSpace: ColorSpace = 'oklch',
 ): string[] {
   if (colors.length === 0) return []
   if (colors.length === 1) {
@@ -99,9 +104,9 @@ export function generatePalette(
     const c1 = colorObjects[segmentIndex]
     const c2 = colorObjects[segmentIndex + 1]
 
-    // Interpolate in OKLCH
+    // Interpolate in the selected color space
     const mixed = c1.mix(c2, segmentT, {
-      space: 'oklch',
+      space: colorSpace,
       hue: takeLongWay ? 'longer' : 'shorter',
     })
     result.push(mixed.to('srgb').toString({ format: 'hex' }))

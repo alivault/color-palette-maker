@@ -26,7 +26,7 @@ export const Route = createRootRoute({
       {
         name: 'description',
         content:
-          'A unique and intuitive tool for crafting harmonious color palettes. Uses OKLCH and framer-motion for smooth performance.',
+          'A unique and intuitive tool for crafting harmonious color palettes. Supports multiple color spaces like OKLCH, sRGB, HSL, and more.',
       },
       {
         property: 'og:title',
@@ -35,7 +35,7 @@ export const Route = createRootRoute({
       {
         property: 'og:description',
         content:
-          'A unique and intuitive tool for crafting harmonious color palettes. Uses OKLCH and framer-motion for smooth performance.',
+          'A unique and intuitive tool for crafting harmonious color palettes. Supports multiple color spaces like OKLCH, sRGB, HSL, and more.',
       },
     ],
     links: [

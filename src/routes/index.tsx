@@ -5,11 +5,13 @@ import { MobileControlsTrigger } from '@/components/MobileControlsTrigger'
 import { Palette } from '@/components/Palette'
 import { ExportDialog } from '@/components/ExportDialog'
 import { usePalette } from '@/hooks/usePalette'
+import type { ColorSpace } from '@/lib/color-utils'
 
 type SearchParams = {
   numTiles?: number
   colors?: string[]
   rainbowMode?: boolean
+  colorSpace?: ColorSpace
 }
 
 export const Route = createFileRoute('/')({
@@ -21,6 +23,9 @@ export const Route = createFileRoute('/')({
         ? (search.colors as string[])
         : undefined,
       rainbowMode: search.rainbowMode ? Boolean(search.rainbowMode) : undefined,
+      colorSpace: search.colorSpace
+        ? (search.colorSpace as ColorSpace)
+        : undefined,
     }
   },
 })
@@ -33,12 +38,14 @@ function App() {
     numTiles,
     colors,
     takeLongWay,
+    colorSpace,
     selectedColorId,
     setSelectedColorId,
     setNumTiles,
     setColors,
     setLocalColors,
     setTakeLongWay,
+    setColorSpace,
     exportText,
   } = usePalette({ searchParams, navigate })
 
@@ -58,6 +65,8 @@ function App() {
             setSelectedColorId={setSelectedColorId}
             takeLongWay={takeLongWay}
             setTakeLongWay={setTakeLongWay}
+            colorSpace={colorSpace}
+            setColorSpace={setColorSpace}
           />
 
           {/* Palette Grid */}
@@ -67,6 +76,7 @@ function App() {
                 numTiles={numTiles}
                 colors={colors}
                 takeLongWay={takeLongWay}
+                colorSpace={colorSpace}
               />
             </div>
           </div>
@@ -86,6 +96,8 @@ function App() {
                 setSelectedColorId={setSelectedColorId}
                 takeLongWay={takeLongWay}
                 setTakeLongWay={setTakeLongWay}
+                colorSpace={colorSpace}
+                setColorSpace={setColorSpace}
               />
             </div>
           </div>

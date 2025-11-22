@@ -18,12 +18,20 @@ import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { GradientSlider } from './GradientSlider'
 import { useState, useEffect } from 'react'
 import {
   getHueGradient,
   getSatGradient,
   getLightGradient,
+  POLAR_COLOR_SPACES,
 } from '@/lib/color-utils'
 import { Plus, Info } from 'lucide-react'
 import {
@@ -32,7 +40,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { v4 as uuidv4 } from 'uuid'
-import type { ColorStop } from '@/lib/color-utils'
+import type { ColorStop, ColorSpace } from '@/lib/color-utils'
 import Color from 'colorjs.io'
 import { SortableColorItem } from './SortableColorItem'
 
@@ -46,6 +54,8 @@ export type ControlsProps = {
   setSelectedColorId: (id: string | null) => void
   takeLongWay: boolean
   setTakeLongWay: (value: boolean) => void
+  colorSpace?: ColorSpace
+  setColorSpace?: (space: ColorSpace) => void
 }
 
 export function Controls({
@@ -58,6 +68,8 @@ export function Controls({
   setSelectedColorId,
   takeLongWay,
   setTakeLongWay,
+  colorSpace = 'oklch',
+  setColorSpace,
 }: ControlsProps) {
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -172,6 +184,8 @@ export function Controls({
     ? getLightGradient(selectedColor.h, selectedColor.s)
     : ''
 
+  const isPolar = POLAR_COLOR_SPACES.includes(colorSpace)
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex-none space-y-4 border-b p-5">
@@ -187,19 +201,46 @@ export function Controls({
           max={100}
           step={1}
         />
+        {setColorSpace && (
+          <div className="flex items-center justify-between pt-4">
+            <Label>Color Space</Label>
+            <Select
+              value={colorSpace}
+              onValueChange={(v) => setColorSpace(v as ColorSpace)}
+            >
+              <SelectTrigger className="w-[140px]">
+                <SelectValue placeholder="Select space" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="srgb">sRGB</SelectItem>
+                <SelectItem value="hsl">HSL</SelectItem>
+                <SelectItem value="lch">LCH</SelectItem>
+                <SelectItem value="oklch">OKLCH</SelectItem>
+                <SelectItem value="lab">LAB</SelectItem>
+                <SelectItem value="oklab">OKLAB</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
         <div className="flex items-center justify-between pt-4">
           <div className="flex items-center gap-2">
-            <Label htmlFor="long-way-switch" className="cursor-pointer">
+            <Label
+              htmlFor="long-way-switch"
+              className={!isPolar ? 'text-muted-foreground' : 'cursor-pointer'}
+            >
               Rainbow mode
             </Label>
             <Tooltip delayDuration={0}>
-              <TooltipTrigger>
-                <Info className="text-muted-foreground h-4 w-4" />
+              <TooltipTrigger asChild>
+                <Info
+                  className={`h-4 w-4 ${!isPolar ? 'text-muted-foreground/50' : 'text-muted-foreground'}`}
+                />
               </TooltipTrigger>
               <TooltipContent>
                 <p className="max-w-[200px]">
-                  Force the gradient to take the long route around the color
-                  wheel, effectively creating a rainbow.
+                  {isPolar
+                    ? 'Force the gradient to take the long route around the color wheel, effectively creating a rainbow.'
+                    : 'Rainbow mode is only available for polar color spaces (HSL, LCH, OKLCH).'}
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -208,6 +249,7 @@ export function Controls({
             id="long-way-switch"
             checked={takeLongWay}
             onCheckedChange={setTakeLongWay}
+            disabled={!isPolar}
           />
         </div>
       </div>
