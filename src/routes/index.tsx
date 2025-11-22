@@ -1,57 +1,24 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState, useEffect, useMemo } from 'react'
-import { useMotionValue } from 'motion/react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import {
   Sheet,
   SheetContent,
-  SheetTrigger,
   SheetHeader,
   SheetTitle,
   SheetDescription,
+  SheetTrigger,
 } from '@/components/ui/sheet'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-import { Settings2, Copy, Download } from 'lucide-react'
-import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import { Settings2 } from 'lucide-react'
 import { Header } from '@/components/Header'
 import { Controls } from '@/components/Controls'
 import { Palette } from '@/components/Palette'
-import {
-  type ColorStop,
-  generatePalette,
-  hexToColorStop,
-  colorsToUrlHex,
-} from '@/lib/color-utils'
+import { ExportDialog } from '@/components/ExportDialog'
+import { usePalette } from '@/hooks/usePalette'
 
 type SearchParams = {
   numTiles?: number
   colors?: string[]
   rainbowMode?: boolean
-}
-
-const defaultColors: ColorStop[] = [
-  { id: '1', h: 268, s: 1, l: 0.44 },
-  { id: '2', h: 0, s: 1, l: 0.67 },
-]
-
-const defaultColorsUrl = colorsToUrlHex(defaultColors)
-
-// Helper to check if arrays are equal
-function arraysEqual(a: string[], b: string[]) {
-  if (a === b) return true
-  if (a.length !== b.length) return false
-  for (let i = 0; i < a.length; ++i) {
-    if (a[i] !== b[i]) return false
-  }
-  return true
 }
 
 export const Route = createFileRoute('/')({
@@ -69,136 +36,24 @@ export const Route = createFileRoute('/')({
 
 function App() {
   const navigate = Route.useNavigate()
+  const searchParams = Route.useSearch()
+
   const {
-    numTiles: urlNumTiles,
-    colors: urlColors,
-    rainbowMode: urlRainbowMode,
-  } = Route.useSearch()
-
-  // Use default values if URL params are missing
-  const numTiles = urlNumTiles ?? 12
-  const takeLongWay = urlRainbowMode ?? false
-  const colorsHex = urlColors ?? defaultColorsUrl
-
-  const numTilesMV = useMotionValue(numTiles)
-
-  // We maintain local state for colors to preserve HSL precision and stable IDs during interaction.
-  // The URL is the source of truth for deep linking, but during a session, local state takes precedence
-  // for smooth updates, syncing to URL.
-  const [colors, setColors] = useState<ColorStop[]>(() => {
-    return colorsHex.map(hexToColorStop)
-  })
-
-  // Sync URL changes to local state (e.g. Back/Forward button)
-  useEffect(() => {
-    const currentUrlHex = colorsToUrlHex(colors)
-    const targetHex = urlColors ?? defaultColorsUrl
-
-    const isSame =
-      targetHex.length === currentUrlHex.length &&
-      targetHex.every((hex, i) => hex === currentUrlHex[i])
-
-    if (!isSame) {
-      setColors(targetHex.map(hexToColorStop))
-    }
-  }, [urlColors])
-
-  const [selectedColorId, setSelectedColorId] = useState<string | null>(null)
-
-  useEffect(() => {
-    numTilesMV.set(numTiles)
-  }, [numTiles, numTilesMV])
-
-  const hexColors = useMemo(
-    () => generatePalette(colors, numTiles, takeLongWay),
-    [colors, numTiles, takeLongWay],
-  )
-  const exportText = hexColors.join(', ')
-
-  const handleCopyExport = () => {
-    navigator.clipboard.writeText(exportText)
-    toast.success('Copied palette to clipboard')
-  }
-
-  const handleSetNumTiles = (
-    val: number | ((curr: number) => number),
-    commit: boolean = true,
-  ) => {
-    const newValue = typeof val === 'function' ? val(numTiles) : val
-
-    navigate({
-      search: (prev) => {
-        const next = {
-          ...prev,
-          numTiles: newValue === 12 ? undefined : newValue,
-        }
-        return next
-      },
-      replace: !commit, // Only push to history on commit (mouse up)
-    })
-  }
-
-  const handleSetColors = (newColors: ColorStop[]) => {
-    setColors(newColors)
-
-    // Sync to URL using stripped hex
-    const newColorsHex = colorsToUrlHex(newColors)
-
-    navigate({
-      search: (prev) => {
-        const isDefault = arraysEqual(newColorsHex, defaultColorsUrl)
-        return { ...prev, colors: isDefault ? undefined : newColorsHex }
-      },
-      replace: false, // Push to history
-    })
-  }
-
-  const handleSetTakeLongWay = (val: boolean) => {
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        rainbowMode: val === false ? undefined : val,
-      }),
-      replace: false, // Push to history
-    })
-  }
+    numTiles,
+    colors,
+    takeLongWay,
+    selectedColorId,
+    setSelectedColorId,
+    setNumTiles,
+    setColors,
+    setLocalColors,
+    setTakeLongWay,
+    exportText,
+  } = usePalette({ searchParams, navigate })
 
   return (
     <div className="flex h-full w-full flex-col">
-      <Header
-        action={
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button>
-                <Download className="size-4" />
-                Export
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>Export Palette</DialogTitle>
-                <DialogDescription>
-                  Copy your palette as a comma-separated list of hex codes.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="flex items-center space-x-2">
-                <Input
-                  value={exportText}
-                  readOnly
-                  className="font-mono text-sm"
-                />
-                <Button
-                  size="icon"
-                  onClick={handleCopyExport}
-                  className="shrink-0"
-                >
-                  <Copy className="h-4 w-4" />
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        }
-      />
+      <Header action={<ExportDialog exportText={exportText} />} />
 
       <div className="flex min-h-0 flex-1 flex-col md:flex-row">
         <div className="flex h-full min-h-0 flex-1 flex-col">
@@ -224,14 +79,14 @@ function App() {
                 <div className="mt-6 min-h-0 flex-1 pb-8">
                   <Controls
                     numTiles={numTiles}
-                    onNumTilesChange={handleSetNumTiles}
+                    onNumTilesChange={setNumTiles}
                     colors={colors}
-                    setColors={handleSetColors}
-                    onColorsChange={setColors}
+                    setColors={setColors}
+                    onColorsChange={setLocalColors}
                     selectedColorId={selectedColorId}
                     setSelectedColorId={setSelectedColorId}
                     takeLongWay={takeLongWay}
-                    setTakeLongWay={handleSetTakeLongWay}
+                    setTakeLongWay={setTakeLongWay}
                   />
                 </div>
               </SheetContent>
@@ -256,14 +111,14 @@ function App() {
             <div className="min-h-0 flex-1">
               <Controls
                 numTiles={numTiles}
-                onNumTilesChange={handleSetNumTiles}
+                onNumTilesChange={setNumTiles}
                 colors={colors}
-                setColors={handleSetColors}
-                onColorsChange={setColors}
+                setColors={setColors}
+                onColorsChange={setLocalColors}
                 selectedColorId={selectedColorId}
                 setSelectedColorId={setSelectedColorId}
                 takeLongWay={takeLongWay}
-                setTakeLongWay={handleSetTakeLongWay}
+                setTakeLongWay={setTakeLongWay}
               />
             </div>
           </div>
