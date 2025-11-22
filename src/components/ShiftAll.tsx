@@ -36,7 +36,7 @@ export function ShiftAll({
         <AccordionTrigger className="px-5 py-2 text-sm hover:no-underline">
           <div className="flex items-center gap-2">
             <p>Shift All</p>
-            <Tooltip delayDuration={300}>
+            <Tooltip>
               <TooltipTrigger asChild>
                 <Info className="text-muted-foreground size-4" />
               </TooltipTrigger>

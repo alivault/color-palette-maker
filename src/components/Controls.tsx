@@ -286,7 +286,7 @@ export function Controls({
               >
                 Rainbow Mode
               </Label>
-              <Tooltip delayDuration={300}>
+              <Tooltip>
                 <TooltipTrigger asChild>
                   <Info
                     className={`h-4 w-4 ${!isPolar ? 'text-muted-foreground/50' : 'text-muted-foreground'}`}
