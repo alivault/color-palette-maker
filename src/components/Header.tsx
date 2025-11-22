@@ -9,7 +9,7 @@ export function Header({ className, action, ...props }: HeaderProps) {
   return (
     <div
       className={cn(
-        'flex shrink-0 flex-row items-center justify-between gap-4 border-b px-5 py-4',
+        'flex shrink-0 flex-row items-center justify-between gap-4 border-b px-5 py-2',
         className,
       )}
       {...props}
