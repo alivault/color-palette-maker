@@ -353,7 +353,7 @@ export function Controls({
           </DndContext>
 
           <Button onClick={addColor} className="w-full" variant="outline">
-            <Plus className="mr-2 h-4 w-4" /> Add Color
+            <Plus className="h-4 w-4" /> Add Color
           </Button>
         </div>
       </div>
