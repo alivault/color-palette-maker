@@ -26,7 +26,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { GradientSlider } from './GradientSlider'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useId } from 'react'
 import {
   getHueGradient,
   getSatGradient,
@@ -186,6 +186,8 @@ export function Controls({
 
   const isPolar = POLAR_COLOR_SPACES.includes(colorSpace)
 
+  const id = useId()
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex-none space-y-4 border-b p-5">
@@ -261,6 +263,7 @@ export function Controls({
           </div>
 
           <DndContext
+            id={id}
             sensors={sensors}
             collisionDetection={closestCenter}
             onDragEnd={handleDragEnd}
