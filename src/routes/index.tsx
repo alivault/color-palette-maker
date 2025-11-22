@@ -6,6 +6,7 @@ import { Palette } from '@/components/Palette'
 import { ExportDialog } from '@/components/ExportDialog'
 import { usePalette } from '@/hooks/usePalette'
 import type { ColorSpace } from '@/lib/color-utils'
+import { useState } from 'react'
 
 type SearchParams = {
   numTiles?: number
@@ -49,6 +50,8 @@ function App() {
     exportText,
   } = usePalette({ searchParams, navigate })
 
+  const [isDragging, setIsDragging] = useState(false)
+
   return (
     <div className="flex h-full w-full flex-col">
       <Header action={<ExportDialog exportText={exportText} />} />
@@ -67,18 +70,18 @@ function App() {
             setTakeLongWay={setTakeLongWay}
             colorSpace={colorSpace}
             setColorSpace={setColorSpace}
+            onDragChange={setIsDragging}
           />
 
           {/* Palette Grid */}
           <div className="flex-1 overflow-y-auto p-5">
-            <div className="flex h-full min-h-[400px] flex-col gap-1">
-              <Palette
-                numTiles={numTiles}
-                colors={colors}
-                takeLongWay={takeLongWay}
-                colorSpace={colorSpace}
-              />
-            </div>
+            <Palette
+              numTiles={numTiles}
+              colors={colors}
+              takeLongWay={takeLongWay}
+              colorSpace={colorSpace}
+              disableAnimation={isDragging}
+            />
           </div>
         </div>
 
@@ -98,6 +101,7 @@ function App() {
                 setTakeLongWay={setTakeLongWay}
                 colorSpace={colorSpace}
                 setColorSpace={setColorSpace}
+                onDragChange={setIsDragging}
               />
             </div>
           </div>

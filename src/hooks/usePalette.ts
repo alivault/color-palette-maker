@@ -8,12 +8,8 @@ import {
 } from '@/lib/color-utils'
 import { arraysEqual } from '@/lib/utils'
 
-const defaultColors: ColorStop[] = [
-  { id: '1', h: 268, s: 1, l: 0.44 },
-  { id: '2', h: 0, s: 1, l: 0.67 },
-]
-
-const defaultColorsUrl = colorsToUrlHex(defaultColors)
+const DARK_DEFAULTS = ['21002e', 'a43400']
+const LIGHT_DEFAULTS = ['ab61ff', 'ffd7d7']
 
 interface UsePaletteProps {
   searchParams: {
@@ -26,17 +22,44 @@ interface UsePaletteProps {
 }
 
 export function usePalette({ searchParams, navigate }: UsePaletteProps) {
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+  })
+
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-color-scheme: dark)')
+    setIsDarkMode(media.matches)
+    const listener = (e: MediaQueryListEvent) => setIsDarkMode(e.matches)
+    media.addEventListener('change', listener)
+    return () => media.removeEventListener('change', listener)
+  }, [])
+
+  // Wait for hydration/mount to avoid flash of wrong theme defaults
+  const [isMounted, setIsMounted] = useState(false)
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  const defaultColorsUrl = isDarkMode ? DARK_DEFAULTS : LIGHT_DEFAULTS
+
   const numTiles = searchParams.numTiles ?? 12
   const takeLongWay = searchParams.rainbowMode ?? false
-  const colorsHex = searchParams.colors ?? defaultColorsUrl
   const colorSpace = searchParams.colorSpace ?? 'oklch'
 
   const [colors, setColors] = useState<ColorStop[]>(() => {
-    return colorsHex.map(hexToColorStop)
+    // If we have explicit colors, render them immediately (SSR friendly if possible)
+    if (searchParams.colors) return searchParams.colors.map(hexToColorStop)
+    // If using defaults, start empty to prevent flash of wrong theme
+    return []
   })
 
   // Sync URL changes to local state
   useEffect(() => {
+    // If we're not mounted yet and using defaults, wait (though isMounted check below handles the return)
+    // But we need to populate 'colors' once mounted and we know the theme.
+    if (!searchParams.colors && !isMounted) return
+
     const currentUrlHex = colorsToUrlHex(colors)
     const targetHex = searchParams.colors ?? defaultColorsUrl
 
@@ -49,7 +72,7 @@ export function usePalette({ searchParams, navigate }: UsePaletteProps) {
     if (!isSame) {
       setColors(targetHex.map(hexToColorStop))
     }
-  }, [searchParams.colors])
+  }, [searchParams.colors, defaultColorsUrl, isMounted])
 
   const handleSetNumTiles = (
     val: number | ((curr: number) => number),

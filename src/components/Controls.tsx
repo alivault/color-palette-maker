@@ -59,6 +59,7 @@ export type ControlsProps = {
   setTakeLongWay: (value: boolean) => void
   colorSpace?: ColorSpace
   setColorSpace?: (space: ColorSpace) => void
+  onDragChange?: (isDragging: boolean) => void
 }
 
 export function Controls({
@@ -73,6 +74,7 @@ export function Controls({
   setTakeLongWay,
   colorSpace = 'oklch',
   setColorSpace,
+  onDragChange,
 }: ControlsProps) {
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -128,6 +130,9 @@ export function Controls({
     const newColors = colors.map((c) =>
       c.id === id ? { ...c, ...updates } : c,
     )
+    if (onDragChange) {
+      onDragChange(!commit)
+    }
     if (commit) {
       setColors(newColors)
     } else if (onColorsChange) {
@@ -222,6 +227,10 @@ export function Controls({
       }
       return newColor
     })
+
+    if (onDragChange) {
+      onDragChange(!commit)
+    }
 
     if (commit) {
       setColors(newColors)
