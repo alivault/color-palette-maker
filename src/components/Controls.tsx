@@ -247,8 +247,8 @@ export function Controls({
   }
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex-none">
+    <div className="flex h-full flex-col overflow-y-auto">
+      <div>
         <div className="space-y-5 border-b p-5">
           <div className="flex items-center justify-between">
             <Label>Number of colors</Label>
@@ -324,7 +324,7 @@ export function Controls({
         />
       </div>
 
-      <div className="min-h-0 shrink overflow-y-auto p-5">
+      <div className="p-5">
         <div className="space-y-5">
           <div className="flex items-center justify-between">
             <h3 className="font-bold">Colors</h3>
@@ -366,7 +366,7 @@ export function Controls({
       </div>
 
       {selectedColor && (
-        <div className="animate-in fade-in slide-in-from-top-2 flex-none space-y-5 border-t px-5 pt-5 pb-10">
+        <div className="animate-in fade-in slide-in-from-top-2 space-y-5 border-t px-5 pt-5 pb-10">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold">Edit Color</h3>
             <div
