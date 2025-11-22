@@ -1,4 +1,3 @@
-
 type JsonLike =
   | null
   | boolean
@@ -275,10 +274,10 @@ const parseLooseValue = (value: string): unknown => {
   // But we want simple hex strings like "aabbcc" to be strings, not NaN.
   // Only parse as number if it strictly matches number format.
   if (/^-?\d*\.?\d+$/.test(trimmed)) {
-      const numeric = Number(trimmed)
-      if (!Number.isNaN(numeric)) {
-        return numeric
-      }
+    const numeric = Number(trimmed)
+    if (!Number.isNaN(numeric)) {
+      return numeric
+    }
   }
 
   return trimmed
@@ -321,12 +320,12 @@ export const stringifySearchParams = (
       const encodedKey = encodeReadableComponent(key)
       // Custom stringification to remove quotes for array of strings
       let jsonString
-      if (Array.isArray(value) && value.every(v => typeof v === 'string')) {
-         jsonString = `[${value.join(',')}]`
+      if (Array.isArray(value) && value.every((v) => typeof v === 'string')) {
+        jsonString = `[${value.join(',')}]`
       } else {
-         jsonString = JSON.stringify(value)
+        jsonString = JSON.stringify(value)
       }
-      
+
       const encodedValue = encodeReadableComponent(jsonString)
       return `${encodedKey}=${encodedValue}`
     })

@@ -145,7 +145,7 @@ code {
 
   /* Slider track styling - matching legacy app */
   /* Dimensions and shadow apply to all sliders */
-  [data-slot="slider-track"] {
+  [data-slot='slider-track'] {
     height: 8px !important;
     border-radius: 16px !important;
     box-shadow: inset 0 0 2px var(--slider-border) !important;
@@ -156,12 +156,14 @@ code {
 
   /* Slider thumb styling - matching legacy app */
   /* Dimensions and shadow apply to all sliders, but background is handled by component classes */
-  [data-slot="slider-thumb"] {
+  [data-slot='slider-thumb'] {
     width: 16px !important;
     height: 16px !important;
     border-radius: 50% !important;
     border: none !important;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 1), 0 0 2px 2px rgba(0, 0, 0, 0.8) !important;
+    box-shadow:
+      0 0 0 2px rgba(255, 255, 255, 1),
+      0 0 2px 2px rgba(0, 0, 0, 0.8) !important;
     cursor: pointer;
   }
 }

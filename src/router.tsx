@@ -13,9 +13,7 @@ export const getRouter = () => {
     defaultPreloadStaleTime: 0,
     parseSearch: parseSearchParams,
     stringifySearch: stringifySearchParams,
-    Wrap: ({ children }) => (
-      <TooltipProvider>{children}</TooltipProvider>
-    ),
+    Wrap: ({ children }) => <TooltipProvider>{children}</TooltipProvider>,
   })
 
   return router

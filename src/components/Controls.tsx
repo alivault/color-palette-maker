@@ -6,45 +6,45 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core'
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
   useSortable,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { Slider } from "@/components/ui/slider";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { GradientSlider } from "./GradientSlider";
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import { Slider } from '@/components/ui/slider'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+import { Switch } from '@/components/ui/switch'
+import { GradientSlider } from './GradientSlider'
 import {
   getHueGradient,
   getSatGradient,
   getLightGradient,
-} from "@/lib/color-utils";
-import { Trash2, GripVertical, Plus, Info } from "lucide-react";
+} from '@/lib/color-utils'
+import { Trash2, GripVertical, Plus, Info } from 'lucide-react'
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { v4 as uuidv4 } from "uuid";
-import type { ColorStop } from "@/lib/color-utils";
-import Color from "colorjs.io";
+} from '@/components/ui/tooltip'
+import { v4 as uuidv4 } from 'uuid'
+import type { ColorStop } from '@/lib/color-utils'
+import Color from 'colorjs.io'
 
 export type ControlsProps = {
-  numTiles: number;
-  onNumTilesChange: (value: number) => void;
-  colors: ColorStop[];
-  setColors: (colors: ColorStop[]) => void;
-  selectedColorId: string | null;
-  setSelectedColorId: (id: string | null) => void;
-  takeLongWay: boolean;
-  setTakeLongWay: (value: boolean) => void;
-};
+  numTiles: number
+  onNumTilesChange: (value: number) => void
+  colors: ColorStop[]
+  setColors: (colors: ColorStop[]) => void
+  selectedColorId: string | null
+  setSelectedColorId: (id: string | null) => void
+  takeLongWay: boolean
+  setTakeLongWay: (value: boolean) => void
+}
 
 export function Controls({
   numTiles,
@@ -65,10 +65,10 @@ export function Controls({
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
-  );
+  )
 
   const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
+    const { active, over } = event
 
     if (over && active.id !== over.id) {
       setColors(
@@ -77,47 +77,47 @@ export function Controls({
           colors.findIndex((item) => item.id === active.id),
           colors.findIndex((item) => item.id === over.id),
         ),
-      );
+      )
     }
-  };
+  }
 
   const addColor = () => {
-    const lastColor = colors[colors.length - 1];
+    const lastColor = colors[colors.length - 1]
     const newColor: ColorStop = {
       id: uuidv4(),
       h: lastColor.h,
       s: lastColor.s,
       l: lastColor.l,
-    };
-    setColors([...colors, newColor]);
-    setSelectedColorId(newColor.id);
-  };
+    }
+    setColors([...colors, newColor])
+    setSelectedColorId(newColor.id)
+  }
 
   const removeColor = (id: string) => {
-    if (colors.length <= 2) return;
-    const newColors = colors.filter((c) => c.id !== id);
-    setColors(newColors);
+    if (colors.length <= 2) return
+    const newColors = colors.filter((c) => c.id !== id)
+    setColors(newColors)
     if (selectedColorId === id) {
-      setSelectedColorId(null);
+      setSelectedColorId(null)
     }
-  };
+  }
 
   const updateColor = (id: string, updates: Partial<ColorStop>) => {
-    setColors(colors.map((c) => (c.id === id ? { ...c, ...updates } : c)));
-  };
+    setColors(colors.map((c) => (c.id === id ? { ...c, ...updates } : c)))
+  }
 
-  const selectedColor = colors.find((c) => c.id === selectedColorId);
+  const selectedColor = colors.find((c) => c.id === selectedColorId)
 
-  const hueGradient = getHueGradient();
-  const satGradient = selectedColor ? getSatGradient(selectedColor.h) : "";
+  const hueGradient = getHueGradient()
+  const satGradient = selectedColor ? getSatGradient(selectedColor.h) : ''
   const lightGradient = selectedColor
     ? getLightGradient(selectedColor.h, selectedColor.s)
-    : "";
+    : ''
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="space-y-4 flex-none p-5 border-b">
-        <div className="flex justify-between items-center">
+    <div className="flex h-full flex-col">
+      <div className="flex-none space-y-4 border-b p-5">
+        <div className="flex items-center justify-between">
           <Label>Number of colors</Label>
           <span className="font-mono text-sm">{numTiles}</span>
         </div>
@@ -130,14 +130,17 @@ export function Controls({
         />
         <div className="flex items-center justify-between pt-4">
           <div className="flex items-center gap-2">
-            <Label htmlFor="long-way-switch" className="cursor-pointer">Rainbow mode</Label>
+            <Label htmlFor="long-way-switch" className="cursor-pointer">
+              Rainbow mode
+            </Label>
             <Tooltip delayDuration={0}>
               <TooltipTrigger>
-                <Info className="h-4 w-4 text-muted-foreground" />
+                <Info className="text-muted-foreground h-4 w-4" />
               </TooltipTrigger>
               <TooltipContent>
                 <p className="max-w-[200px]">
-                  Force the gradient to take the long route around the color wheel, effectively creating a rainbow.
+                  Force the gradient to take the long route around the color
+                  wheel, effectively creating a rainbow.
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -150,9 +153,9 @@ export function Controls({
         </div>
       </div>
 
-      <div className="shrink min-h-0 overflow-y-auto p-5">
+      <div className="min-h-0 shrink overflow-y-auto p-5">
         <div className="space-y-4">
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between">
             <h3 className="font-bold">Colors</h3>
           </div>
 
@@ -185,17 +188,17 @@ export function Controls({
           </DndContext>
 
           <Button onClick={addColor} className="w-full" variant="outline">
-            <Plus className="w-4 h-4 mr-2" /> Add Color
+            <Plus className="mr-2 h-4 w-4" /> Add Color
           </Button>
         </div>
       </div>
 
       {selectedColor && (
-        <div className="flex-none border-t px-5 pt-5 pb-10 space-y-6 animate-in fade-in slide-in-from-top-2">
+        <div className="animate-in fade-in slide-in-from-top-2 flex-none space-y-6 border-t px-5 pt-5 pb-10">
           <div className="flex items-center justify-between">
-            <h3 className="font-bold text-sm">Edit Color</h3>
+            <h3 className="text-sm font-bold">Edit Color</h3>
             <div
-              className="w-6 h-6 rounded-full border border-border shadow-sm"
+              className="border-border h-6 w-6 rounded-full border shadow-sm"
               style={{
                 backgroundColor: `hsl(${selectedColor.h}, ${selectedColor.s * 100}%, ${selectedColor.l * 100}%)`,
               }}
@@ -261,7 +264,7 @@ export function Controls({
         </div>
       )}
     </div>
-  );
+  )
 }
 
 function SortableColorItem({
@@ -271,61 +274,63 @@ function SortableColorItem({
   onDelete,
   canDelete,
 }: {
-  color: ColorStop;
-  isSelected: boolean;
-  onClick: () => void;
-  onDelete: () => void;
-  canDelete: boolean;
+  color: ColorStop
+  isSelected: boolean
+  onClick: () => void
+  onDelete: () => void
+  canDelete: boolean
 }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: color.id });
+    useSortable({ id: color.id })
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-  };
+  }
 
-  const hslString = `hsl(${color.h}, ${color.s * 100}%, ${color.l * 100}%)`;
+  const hslString = `hsl(${color.h}, ${color.s * 100}%, ${color.l * 100}%)`
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center gap-2 touch-none"
+      className="flex touch-none items-center gap-2"
     >
       <div
-        className={`flex-1 flex items-center gap-3 p-2 rounded-md border ${isSelected ? "border-primary ring-1 ring-primary" : "border-border"} bg-card hover:bg-accent/50 cursor-pointer transition-colors`}
+        className={`flex flex-1 items-center gap-3 rounded-md border p-2 ${isSelected ? 'border-primary ring-primary ring-1' : 'border-border'} bg-card hover:bg-accent/50 cursor-pointer transition-colors`}
         onClick={onClick}
       >
         <div
           {...attributes}
           {...listeners}
-          className="cursor-grab active:cursor-grabbing p-1 hover:bg-background rounded text-muted-foreground"
+          className="hover:bg-background text-muted-foreground cursor-grab rounded p-1 active:cursor-grabbing"
         >
-          <GripVertical className="w-4 h-4" />
+          <GripVertical className="h-4 w-4" />
         </div>
 
         <div
-          className="size-8 rounded border border-border shadow-sm"
+          className="border-border size-8 rounded border shadow-sm"
           style={{ backgroundColor: hslString }}
         />
 
-        <p className="flex text-xs text-muted-foreground font-mono">
-          {new Color("hsl", [color.h, color.s * 100, color.l * 100]).to("srgb").toString({ format: "hex" })}
+        <p className="text-muted-foreground flex font-mono text-xs">
+          {new Color('hsl', [color.h, color.s * 100, color.l * 100])
+            .to('srgb')
+            .toString({ format: 'hex' })}
         </p>
       </div>
       <Button
         variant="ghost"
         size="icon-sm"
         onClick={(e) => {
-          e.stopPropagation();
-          onDelete();
+          e.stopPropagation()
+          onDelete()
         }}
-        className="text-muted-foreground hover:text-red-500 hover:bg-red-950"
+        className="text-muted-foreground hover:bg-red-950 hover:text-red-500"
         disabled={!canDelete}
       >
-        <Trash2 className="w-4 h-4" />
+        <Trash2 className="h-4 w-4" />
       </Button>
     </div>
-  );
+  )
 }

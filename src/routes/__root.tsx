@@ -1,4 +1,9 @@
-import { HeadContent, Scripts, createRootRoute, Outlet } from '@tanstack/react-router'
+import {
+  HeadContent,
+  Scripts,
+  createRootRoute,
+  Outlet,
+} from '@tanstack/react-router'
 import { Toaster } from '../components/ui/sonner'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
@@ -20,7 +25,8 @@ export const Route = createRootRoute({
       },
       {
         name: 'description',
-        content: 'A unique and intuitive tool for crafting harmonious color palettes. Uses OKLCH and framer-motion for smooth performance.',
+        content:
+          'A unique and intuitive tool for crafting harmonious color palettes. Uses OKLCH and framer-motion for smooth performance.',
       },
       {
         property: 'og:title',
@@ -28,7 +34,8 @@ export const Route = createRootRoute({
       },
       {
         property: 'og:description',
-        content: 'A unique and intuitive tool for crafting harmonious color palettes. Uses OKLCH and framer-motion for smooth performance.',
+        content:
+          'A unique and intuitive tool for crafting harmonious color palettes. Uses OKLCH and framer-motion for smooth performance.',
       },
     ],
     links: [
@@ -51,8 +58,8 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <div className="flex flex-col h-screen bg-background text-foreground">
-      <div className="flex-1 min-h-0">
+    <div className="bg-background text-foreground flex h-screen flex-col">
+      <div className="min-h-0 flex-1">
         <Outlet />
       </div>
       <TanStackDevtools
