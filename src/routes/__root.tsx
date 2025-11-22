@@ -1,7 +1,7 @@
 import { HeadContent, Scripts, createRootRoute, Outlet } from '@tanstack/react-router'
+import { Toaster } from '../components/ui/sonner'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
-import { Header } from '@/components/Header'
 
 import appCss from '../styles.css?url'
 
@@ -52,7 +52,6 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <div className="flex flex-col h-screen bg-background text-foreground">
-      <Header />
       <div className="flex-1 min-h-0">
         <Outlet />
       </div>
@@ -70,8 +69,6 @@ function RootComponent() {
     </div>
   )
 }
-
-import { Toaster } from '../components/ui/sonner'
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
