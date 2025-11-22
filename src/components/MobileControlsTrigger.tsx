@@ -21,6 +21,7 @@ export function MobileControlsTrigger(props: ControlsProps) {
         <SheetContent
           side="right"
           className="flex h-full w-[300px] flex-col gap-0"
+          onOpenAutoFocus={(e) => e.preventDefault()}
         >
           <SheetHeader className="flex-none">
             <SheetTitle>Controls</SheetTitle>
