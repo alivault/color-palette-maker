@@ -17,23 +17,76 @@ import { toast } from 'sonner'
 import { Header } from '@/components/Header'
 import { Controls } from '@/components/Controls'
 import { Palette } from '@/components/Palette'
-import { type ColorStop, generatePalette } from '@/lib/color-utils'
+import { type ColorStop, generatePalette, hexToColorStop, colorsToUrlHex } from '@/lib/color-utils'
+
+type SearchParams = {
+  numTiles?: number
+  colors?: string[]
+  rainbowMode?: boolean
+}
+
+const defaultColors: ColorStop[] = [
+  { id: '1', h: 268, s: 1, l: 0.44 },
+  { id: '2', h: 0, s: 1, l: 0.67 },
+]
+
+const defaultColorsUrl = colorsToUrlHex(defaultColors)
+
+// Helper to check if arrays are equal
+function arraysEqual(a: string[], b: string[]) {
+  if (a === b) return true;
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; ++i) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
+}
 
 export const Route = createFileRoute('/')({
   component: App,
+  validateSearch: (search: Record<string, unknown>): SearchParams => {
+    return {
+      numTiles: search.numTiles ? Number(search.numTiles) : undefined,
+      colors: Array.isArray(search.colors) 
+        ? (search.colors as string[]) 
+        : undefined,
+      rainbowMode: search.rainbowMode ? Boolean(search.rainbowMode) : undefined,
+    }
+  },
 })
 
 function App() {
-  const [numTiles, setNumTiles] = useState(12)
-  const numTilesMV = useMotionValue(numTiles)
+  const navigate = Route.useNavigate()
+  const { numTiles: urlNumTiles, colors: urlColors, rainbowMode: urlRainbowMode } = Route.useSearch()
 
-  const [colors, setColors] = useState<ColorStop[]>([
-    { id: '1', h: 268, s: 1, l: 0.44 },
-    { id: '2', h: 0, s: 1, l: 0.67 },
-  ])
+  // Use default values if URL params are missing
+  const numTiles = urlNumTiles ?? 12
+  const takeLongWay = urlRainbowMode ?? false
+  const colorsHex = urlColors ?? defaultColorsUrl
+
+  const numTilesMV = useMotionValue(numTiles)
+  
+  // We maintain local state for colors to preserve HSL precision and stable IDs during interaction.
+  // The URL is the source of truth for deep linking, but during a session, local state takes precedence
+  // for smooth updates, syncing to URL.
+  const [colors, setColors] = useState<ColorStop[]>(() => {
+    return colorsHex.map(hexToColorStop)
+  })
+
+  // Sync URL changes to local state (e.g. Back/Forward button)
+  useEffect(() => {
+    const currentUrlHex = colorsToUrlHex(colors)
+    const targetHex = urlColors ?? defaultColorsUrl
+    
+    const isSame = targetHex.length === currentUrlHex.length && 
+      targetHex.every((hex, i) => hex === currentUrlHex[i])
+    
+    if (!isSame) {
+      setColors(targetHex.map(hexToColorStop))
+    }
+  }, [urlColors])
 
   const [selectedColorId, setSelectedColorId] = useState<string | null>(null)
-  const [takeLongWay, setTakeLongWay] = useState(false)
 
   useEffect(() => {
     numTilesMV.set(numTiles)
@@ -45,6 +98,40 @@ function App() {
   const handleCopyExport = () => {
     navigator.clipboard.writeText(exportText)
     toast.success("Copied palette to clipboard")
+  }
+
+  const handleSetNumTiles = (val: number | ((curr: number) => number)) => {
+    const newValue = typeof val === 'function' ? val(numTiles) : val
+    
+    navigate({
+      search: (prev) => {
+        const next = { ...prev, numTiles: newValue === 12 ? undefined : newValue }
+        return next
+      },
+      replace: true, // Don't push to history for slider changes
+    })
+  }
+
+  const handleSetColors = (newColors: ColorStop[]) => {
+    setColors(newColors)
+    
+    // Sync to URL using stripped hex
+    const newColorsHex = colorsToUrlHex(newColors)
+    
+    navigate({
+      search: (prev) => {
+         const isDefault = arraysEqual(newColorsHex, defaultColorsUrl)
+         return { ...prev, colors: isDefault ? undefined : newColorsHex }
+      },
+      replace: false, // Push to history
+    })
+  }
+
+  const handleSetTakeLongWay = (val: boolean) => {
+    navigate({
+      search: (prev) => ({ ...prev, rainbowMode: val === false ? undefined : val }),
+      replace: false, // Push to history
+    })
   }
 
   return (
@@ -94,13 +181,13 @@ function App() {
                  <div className="flex-1 min-h-0 mt-6 pb-8">
                     <Controls 
                       numTiles={numTiles} 
-                      onNumTilesChange={setNumTiles}
+                      onNumTilesChange={handleSetNumTiles}
                       colors={colors}
-                      setColors={setColors}
+                      setColors={handleSetColors}
                       selectedColorId={selectedColorId}
                       setSelectedColorId={setSelectedColorId}
                       takeLongWay={takeLongWay}
-                      setTakeLongWay={setTakeLongWay}
+                      setTakeLongWay={handleSetTakeLongWay}
                     />
                  </div>
                </SheetContent>
@@ -125,13 +212,13 @@ function App() {
             <div className="flex-1 min-h-0">
               <Controls 
                 numTiles={numTiles} 
-                onNumTilesChange={setNumTiles}
+                onNumTilesChange={handleSetNumTiles}
                 colors={colors}
-                setColors={setColors}
+                setColors={handleSetColors}
                 selectedColorId={selectedColorId}
                 setSelectedColorId={setSelectedColorId}
                 takeLongWay={takeLongWay}
-                setTakeLongWay={setTakeLongWay}
+                setTakeLongWay={handleSetTakeLongWay}
               />
             </div>
           </div>

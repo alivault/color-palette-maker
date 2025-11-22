@@ -1,4 +1,5 @@
 import Color from 'colorjs.io'
+import { v4 as uuidv4 } from 'uuid'
 
 export const wrapHue = (h: number) => ((h % 360) + 360) % 360
 
@@ -21,6 +22,44 @@ export type ColorStop = {
   s: number
   l: number
 }
+
+export const hexToColorStop = (hex: string): ColorStop => {
+  try {
+    // Add hash if missing
+    const hexWithHash = hex.startsWith('#') ? hex : `#${hex}`
+    const c = new Color(hexWithHash)
+    const hsl = c.to('hsl')
+    return {
+      id: uuidv4(),
+      h: hsl.coords[0] || 0, // Handle NaN for achromatic colors
+      s: (hsl.coords[1] || 0) / 100,
+      l: (hsl.coords[2] || 0) / 100,
+    }
+  } catch (e) {
+    console.error(`Failed to parse color: ${hex}`, e)
+    // Fallback
+    return { id: uuidv4(), h: 0, s: 0, l: 0 }
+  }
+}
+
+// This function is used for URL generation - strip the hash
+export const colorsToUrlHex = (colors: ColorStop[]): string[] => {
+  return colors.map((c) =>
+    new Color('hsl', [c.h, c.s * 100, c.l * 100])
+      .to('srgb')
+      .toString({ format: 'hex' })
+      .replace('#', '')
+  )
+}
+
+// This function is used for displaying full hex codes (e.g. in the export dialog)
+export const colorsToFullHex = (colors: ColorStop[]): string[] => {
+    return colors.map((c) =>
+      new Color('hsl', [c.h, c.s * 100, c.l * 100])
+        .to('srgb')
+        .toString({ format: 'hex' })
+    )
+  }
 
 export function generatePalette(colors: ColorStop[], numTiles: number, takeLongWay: boolean): string[] {
   if (colors.length === 0) return []

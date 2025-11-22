@@ -1,5 +1,6 @@
 import { createRouter } from '@tanstack/react-router'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { parseSearchParams, stringifySearchParams } from '@/lib/search-params'
 
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
@@ -10,6 +11,8 @@ export const getRouter = () => {
     routeTree,
     scrollRestoration: true,
     defaultPreloadStaleTime: 0,
+    parseSearch: parseSearchParams,
+    stringifySearch: stringifySearchParams,
     Wrap: ({ children }) => (
       <TooltipProvider>{children}</TooltipProvider>
     ),
