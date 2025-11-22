@@ -115,7 +115,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         {/* Mobile: - button on left */}
         <Button
           aria-label="Decrease value"
-          className="border-input h-8 rounded-l-md rounded-r-none border-r-0 md:hidden"
+          className="border-input h-9 rounded-l-md rounded-r-none border-r-0 md:hidden"
           variant="outline"
           onClick={handleDecrement}
           disabled={value === min}
@@ -138,14 +138,14 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
           prefix={prefix}
           customInput={Input}
           placeholder={placeholder}
-          className="relative h-8 w-13 shrink-0 [appearance:textfield] rounded-none md:rounded-l-md md:rounded-r-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          className="relative h-9 w-13 shrink-0 [appearance:textfield] rounded-none md:rounded-l-md md:rounded-r-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
           getInputRef={ref}
           {...props}
         />
         {/* Mobile: + button on right */}
         <Button
           aria-label="Increase value"
-          className="border-input h-8 rounded-l-none rounded-r-md border-l-0 md:hidden"
+          className="border-input h-9 rounded-l-none rounded-r-md border-l-0 md:hidden"
           variant="outline"
           onClick={handleIncrement}
           disabled={value === max}
@@ -156,7 +156,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         <div className="hidden flex-col md:flex">
           <Button
             aria-label="Increase value"
-            className="border-input h-4 rounded-l-none rounded-br-none border-b-[0.5px] border-l-0 py-0 focus-visible:relative has-[>svg]:px-3"
+            className="border-input h-4.5 rounded-l-none rounded-br-none border-b-[0.5px] border-l-0 py-0 focus-visible:relative has-[>svg]:px-3"
             variant="outline"
             onClick={handleIncrement}
             disabled={value === max}
@@ -165,7 +165,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
           </Button>
           <Button
             aria-label="Decrease value"
-            className="border-input h-4 rounded-l-none rounded-tr-none border-t-[0.5px] border-l-0 py-0 focus-visible:relative has-[>svg]:px-3"
+            className="border-input h-4.5 rounded-l-none rounded-tr-none border-t-[0.5px] border-l-0 py-0 focus-visible:relative has-[>svg]:px-3"
             variant="outline"
             onClick={handleDecrement}
             disabled={value === min}
