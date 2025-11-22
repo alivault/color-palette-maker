@@ -130,7 +130,7 @@ export function Controls({
         />
         <div className="flex items-center justify-between pt-4">
           <div className="flex items-center gap-2">
-            <Label htmlFor="long-way-switch">Rainbow mode</Label>
+            <Label htmlFor="long-way-switch" className="cursor-pointer">Rainbow mode</Label>
             <Tooltip delayDuration={0}>
               <TooltipTrigger>
                 <Info className="h-4 w-4 text-muted-foreground" />
@@ -316,12 +316,12 @@ function SortableColorItem({
       </div>
       <Button
         variant="ghost"
-        size="icon"
+        size="icon-sm"
         onClick={(e) => {
           e.stopPropagation();
           onDelete();
         }}
-        className="h-8 w-8 text-muted-foreground hover:text-destructive"
+        className="text-muted-foreground hover:text-red-500 hover:bg-red-950"
         disabled={!canDelete}
       >
         <Trash2 className="w-4 h-4" />
