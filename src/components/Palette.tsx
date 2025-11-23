@@ -83,7 +83,7 @@ const PaletteTile = memo(
       const black = new Color('black')
       const contrastWhite = c.contrast(white, 'WCAG21')
       const contrastBlack = c.contrast(black, 'WCAG21')
-      return contrastWhite > contrastBlack ? 'white' : 'black'
+      return contrastWhite > contrastBlack ? '#ffffff' : '#000000'
     }, [colorHex])
 
     const handleCopy = () => {
@@ -95,7 +95,7 @@ const PaletteTile = memo(
       <motion.div
         layout
         ref={ref}
-        initial={{ opacity: 0, scale: 0.8, y: 20 }}
+        initial={{ opacity: 0, scale: 0.8, y: 20, color: textColor }}
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
         animate={{
