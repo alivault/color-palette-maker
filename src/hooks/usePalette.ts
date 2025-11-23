@@ -5,6 +5,7 @@ import {
   hexToColorStop,
   colorsToUrlHex,
   generatePalette,
+  clamp,
 } from '@/lib/color-utils'
 import { arraysEqual } from '@/lib/utils'
 
@@ -43,7 +44,7 @@ export function usePalette({ searchParams, navigate }: UsePaletteProps) {
 
   const defaultColorsUrl = isDarkMode ? DARK_DEFAULTS : LIGHT_DEFAULTS
 
-  const numTiles = searchParams.numTiles ?? 12
+  const numTiles = clamp(searchParams.numTiles ?? 12, 2, 48)
   const takeLongWay = searchParams.rainbowMode ?? false
   const colorSpace = searchParams.colorSpace ?? 'oklch'
 

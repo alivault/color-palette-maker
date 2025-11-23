@@ -47,7 +47,7 @@ export const Palette = memo(
     if (hexColors.length === 0) return null
 
     return (
-      <div className="flex h-full min-h-[400px] flex-col gap-1">
+      <div className="flex min-h-full flex-col gap-1 p-5">
         <AnimatePresence mode="popLayout">
           {hexColors.map((color, i) => (
             <PaletteTile
