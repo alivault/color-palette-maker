@@ -258,7 +258,7 @@ export function Controls({
                 v !== undefined && onNumTilesChange(v, true)
               }
               min={2}
-              max={100}
+              max={48}
               stepper={1}
             />
           </div>
